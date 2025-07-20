@@ -3,136 +3,743 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Input PO & Antrian - Admin Panel</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PO Countdown & Queue</title>
     <style>
         body {
-            background-color: #0f0f1a;
-            font-family: 'Segoe UI', sans-serif;
-            color: white;
-            padding: 2rem;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
         }
 
-        #antrianForm {
-            background-color: #1a1a2e;
-            padding: 2rem;
-            border-radius: 10px;
-            max-width: 600px;
-            margin: auto;
-            box-shadow: 0 0 20px rgba(106, 17, 203, 0.5);
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
-        h3 {
+        .countdown-section {
             text-align: center;
-            margin-bottom: 1rem;
-            color: #00eaff;
-        }
-
-        #antrianInputs div {
-            border: 1px solid #333;
-            background-color: #22223a;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-
-        input,
-        select {
-            width: 100%;
-            margin-bottom: 0.5rem;
-            padding: 0.6rem;
-            border: none;
-            border-radius: 5px;
-            background-color: #2b2b44;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            border-radius: 15px;
             color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
-        button[type="submit"] {
-            width: 100%;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            color: white;
+        .countdown-text {
+            font-size: 1.8rem;
             font-weight: bold;
-            padding: 0.8rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            margin-bottom: 10px;
         }
 
-        button[type="submit"]:hover {
-            box-shadow: 0 0 10px #6a11cb;
+        .process-info {
+            font-size: 1.4rem;
+            color: #00f2fe;
+            text-shadow: 0 0 10px #00f2fe;
+        }
+
+        /* Table Styles */
+        #countdownQueue table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            color: #ffffff;
+            font-weight: 600;
+            text-shadow: 0 0 5px #6a11cb;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        #countdownQueue thead tr {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+        }
+
+        #countdownQueue th {
+            padding: 15px 10px;
+            border: 1px solid #444;
+            text-align: center;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #countdownQueue td {
+            padding: 12px 10px;
+            border: 1px solid #444;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        #countdownQueue tbody tr {
+            background: #111122;
+            transition: all 0.3s ease;
+        }
+
+        #countdownQueue tbody tr:hover {
+            background: #1a1a2e;
+            transform: translateY(-2px);
+        }
+
+        /* Status-based row styling */
+        .status-belum {
+            color: #ff6666;
+            box-shadow: inset 0 0 10px rgba(255, 102, 102, 0.3);
+            background: linear-gradient(90deg, #111122, #331111) !important;
+        }
+
+        .status-proses {
+            color: #ffcc00;
+            box-shadow: inset 0 0 10px rgba(255, 204, 0, 0.3);
+            background: linear-gradient(90deg, #111122, #332211) !important;
+            animation: pulse-yellow 2s infinite;
+        }
+
+        .status-selesai {
+            color: #00ff99;
+            box-shadow: inset 0 0 10px rgba(0, 255, 153, 0.3);
+            background: linear-gradient(90deg, #111122, #113322) !important;
+        }
+
+        /* Status badge styling */
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .status-badge.belum {
+            background: linear-gradient(45deg, #ff4757, #ff3838);
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 71, 87, 0.6);
+        }
+
+        .status-badge.proses {
+            background: linear-gradient(45deg, #ffa502, #ff6348);
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 165, 2, 0.6);
+        }
+
+        .status-badge.selesai {
+            background: linear-gradient(45deg, #2ed573, #1e90ff);
+            color: white;
+            box-shadow: 0 0 15px rgba(46, 213, 115, 0.6);
+        }
+
+        /* Pulse animation for processing items */
+        @keyframes pulse-yellow {
+
+            0%,
+            100% {
+                box-shadow: inset 0 0 10px rgba(255, 204, 0, 0.3);
+            }
+
+            50% {
+                box-shadow: inset 0 0 20px rgba(255, 204, 0, 0.6);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .countdown-text {
+                font-size: 1.4rem;
+            }
+
+            .process-info {
+                font-size: 1.2rem;
+            }
+
+            #countdownQueue th,
+            #countdownQueue td {
+                padding: 8px 5px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .queue-title {
+            color: #00f2fe;
+            font-size: 1.6rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px #00f2fe;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Admin Panel Styles */
+        .admin-panel {
+            margin-bottom: 30px;
+        }
+
+        .admin-toggle-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .admin-toggle-btn:hover {
+            background: linear-gradient(45deg, #ee5a52, #ff6b6b);
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+        }
+
+        .admin-section {
+            background: rgba(26, 26, 46, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 15px;
+            border: 2px solid #444;
+            transition: all 0.3s ease;
+        }
+
+        .admin-section.hidden {
+            display: none;
+        }
+
+        .admin-section h3 {
+            color: #ff6b6b;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px #ff6b6b;
+        }
+
+        .admin-section h4 {
+            color: #00f2fe;
+            margin: 20px 0 15px 0;
+            font-size: 1.2rem;
+            text-shadow: 0 0 8px #00f2fe;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(34, 34, 58, 0.8);
+            border-radius: 10px;
+            border: 1px solid #555;
+        }
+
+        .form-group label {
+            display: block;
+            color: #00eaff;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #2b2b44;
+            border: 2px solid #444;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #00f2fe;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+        }
+
+        .add-queue-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            align-items: end;
+        }
+
+        .add-btn,
+        .save-btn {
+            padding: 12px 20px;
+            background: linear-gradient(45deg, #2ed573, #1e90ff);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .add-btn:hover,
+        .save-btn:hover {
+            background: linear-gradient(45deg, #1e90ff, #2ed573);
+            box-shadow: 0 0 15px rgba(46, 213, 115, 0.5);
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+        }
+
+        .save-btn:hover {
+            background: linear-gradient(45deg, #2575fc, #6a11cb);
+            box-shadow: 0 0 20px rgba(106, 17, 203, 0.6);
+        }
+
+        .edit-queue-item {
+            background: rgba(17, 17, 34, 0.8);
+            border: 1px solid #666;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .edit-queue-item h5 {
+            color: #ffcc00;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .edit-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #ff4757, #ff3838);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: linear-gradient(45deg, #ff3838, #ff4757);
+            box-shadow: 0 0 15px rgba(255, 71, 87, 0.6);
+            transform: scale(1.1);
+        }
+
+        .success-message {
+            background: linear-gradient(45deg, #2ed573, #1e90ff);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            margin: 15px 0;
+            animation: fadeInOut 3s ease-in-out;
+        }
+
+        .error-message {
+            background: linear-gradient(45deg, #ff4757, #ff3838);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            margin: 15px 0;
+            animation: fadeInOut 3s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+
+            0%,
+            100% {
+                opacity: 0;
+            }
+
+            20%,
+            80% {
+                opacity: 1;
+            }
         }
     </style>
+</head>
 
-    <form id="antrianForm">
-        <h3>Tambah/Edit Antrian</h3>
-        <label for="poDatetime">Tanggal & Waktu PO:</label>
-        <input type="datetime-local" id="poDatetime" name="poDatetime" required>
-        <div id="antrianInputs"></div>
-        <button type="submit">Simpan Semua</button>
-    </form>
+<body>
+    <div class="container">
+        <div class="countdown-section">
+            <div id="countdownText" class="countdown-text">Memuat...</div>
+            <div id="processInfo" class="process-info">Memuat informasi...</div>
+        </div>
+
+        <!-- Admin Panel Section -->
+        <div class="admin-panel">
+            <button id="toggleAdminBtn" class="admin-toggle-btn">
+                <span id="toggleText">Tampilkan Admin Panel</span>
+            </button>
+
+            <div id="adminSection" class="admin-section hidden">
+                <h3>Admin Panel - Kelola Antrian</h3>
+
+                <div class="admin-form">
+                    <div class="form-group">
+                        <label for="poDatetime">Tanggal & Waktu PO:</label>
+                        <input type="datetime-local" id="poDatetime" name="poDatetime" required>
+                    </div>
+
+                    <div class="form-group">
+                        <h4>Tambah Antrian Baru</h4>
+                        <div class="add-queue-form">
+                            <input type="text" id="newName" placeholder="Nama" required>
+                            <input type="number" id="newNumber" placeholder="Nomor Antrian" required>
+                            <select id="newStatus">
+                                <option value="belum">Belum</option>
+                                <option value="proses">Proses</option>
+                                <option value="selesai">Selesai</option>
+                            </select>
+                            <select id="newVersion">
+                                <option value="Dasai Reguler">Dasai Reguler</option>
+                                <option value="Liberty Walk">Liberty Walk</option>
+                                <option value="GTR">GTR</option>
+                            </select>
+                            <input type="text" id="newColor" placeholder="Warna" required>
+                            <button type="button" id="addQueueBtn" class="add-btn">Tambah Antrian</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h4>Edit Antrian Existing</h4>
+                        <div id="editQueueList"></div>
+                    </div>
+
+                    <button type="button" id="saveAllBtn" class="save-btn">Simpan Semua Perubahan</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="queue-title">Daftar Antrian Preorder</div>
+
+        <div id="countdownQueue">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Nomor</th>
+                        <th>Versi</th>
+                        <th>Warna</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="queueTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 20px;">
+                            Memuat data antrian...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     <script>
         const BIN_ID = "687cf3f8ee4b395e61f241bc";
         const MASTER_KEY = "$2a$10$dXo6oKsaLDFUYI4RQmujxuGdKk7MOTAycYzcOwgMnAjPXAaJC9GuK";
 
-        async function loadData() {
-            const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-                headers: { "X-Master-Key": MASTER_KEY }
-            });
-            const data = await res.json();
-            document.getElementById('poDatetime').value = data.record.poDatetime || new Date().toISOString().slice(0, 16);
-            populateForm(data.record.queue || []);
-        }
+        let currentQueue = [];
+        let currentPoDatetime = '';
 
-        function populateForm(queue) {
-            const container = document.getElementById('antrianInputs');
-            container.innerHTML = '';
-            for (let i = 0; i < 5; i++) {
-                const q = queue[i] || { name: '', number: '', status: 'belum', version: 'Dasai Reguler', color: '' };
-                container.innerHTML += `
-        <div>
-          <input type="text" name="name${i}" placeholder="Nama" value="${q.name}">
-          <input type="number" name="number${i}" placeholder="Nomor Antrian" value="${q.number}">
-          <select name="status${i}" style="color: ${q.status === 'proses' ? '#ffcc00' : q.status === 'selesai' ? '#00ff99' : '#ff6666'}">
-            <option value="belum" ${q.status === 'belum' ? 'selected' : ''}>belum</option>
-            <option value="proses" ${q.status === 'proses' ? 'selected' : ''}>proses</option>
-            <option value="selesai" ${q.status === 'selesai' ? 'selected' : ''}>selesai</option>
-          </select>
-          <select name="version${i}" style="color: ${q.version === 'Liberty Walk' ? '#ff00ff' : q.version === 'GTR' ? '#00ccff' : '#ffffff'}">
-            <option value="Dasai Reguler" ${q.version === 'Dasai Reguler' ? 'selected' : ''}>Dasai Reguler</option>
-            <option value="Liberty Walk" ${q.version === 'Liberty Walk' ? 'selected' : ''}>Liberty Walk</option>
-            <option value="GTR" ${q.version === 'GTR' ? 'selected' : ''}>GTR</option>
-          </select>
-          <input type="text" name="color${i}" placeholder="Warna" value="${q.color || ''}">
-        </div>
-      `;
+        // Toggle Admin Panel
+        document.getElementById('toggleAdminBtn').addEventListener('click', function () {
+            const adminSection = document.getElementById('adminSection');
+            const toggleText = document.getElementById('toggleText');
+
+            if (adminSection.classList.contains('hidden')) {
+                adminSection.classList.remove('hidden');
+                toggleText.textContent = 'Sembunyikan Admin Panel';
+                loadAdminData();
+            } else {
+                adminSection.classList.add('hidden');
+                toggleText.textContent = 'Tampilkan Admin Panel';
+            }
+        });
+
+        // Load data for admin panel
+        async function loadAdminData() {
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    headers: { "X-Master-Key": MASTER_KEY }
+                });
+                const data = await res.json();
+
+                currentQueue = data.record.queue || [];
+                currentPoDatetime = data.record.poDatetime || new Date().toISOString().slice(0, 16);
+
+                document.getElementById('poDatetime').value = currentPoDatetime;
+                populateEditForm();
+            } catch (error) {
+                showMessage('Error memuat data admin: ' + error.message, 'error');
             }
         }
 
-        document.getElementById('antrianForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const inputs = [...document.querySelectorAll('#antrianInputs div')];
-            const queue = inputs.map((div, i) => ({
-                name: div.querySelector(`input[name='name${i}']`).value,
-                number: parseInt(div.querySelector(`input[name='number${i}']`).value),
-                status: div.querySelector(`select[name='status${i}']`).value,
-                version: div.querySelector(`select[name='version${i}']`).value,
-                color: div.querySelector(`input[name='color${i}']`).value
-            }));
+        // Populate edit form
+        function populateEditForm() {
+            const container = document.getElementById('editQueueList');
+            container.innerHTML = '';
 
-            const poDatetime = document.getElementById("poDatetime").value || new Date().toISOString();
-
-            await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-Master-Key": MASTER_KEY
-                },
-                body: JSON.stringify({ poDatetime, queue })
+            currentQueue.forEach((item, index) => {
+                const editItem = document.createElement('div');
+                editItem.className = 'edit-queue-item';
+                editItem.innerHTML = `
+                    <button class="delete-btn" onclick="deleteQueueItem(${index})" title="Hapus">×</button>
+                    <h5>Antrian #${index + 1}</h5>
+                    <div class="edit-form">
+                        <input type="text" value="${item.name || ''}" placeholder="Nama" data-field="name" data-index="${index}">
+                        <input type="number" value="${item.number || ''}" placeholder="Nomor" data-field="number" data-index="${index}">
+                        <select data-field="status" data-index="${index}">
+                            <option value="belum" ${item.status === 'belum' ? 'selected' : ''}>Belum</option>
+                            <option value="proses" ${item.status === 'proses' ? 'selected' : ''}>Proses</option>
+                            <option value="selesai" ${item.status === 'selesai' ? 'selected' : ''}>Selesai</option>
+                        </select>
+                        <select data-field="version" data-index="${index}">
+                            <option value="Dasai Reguler" ${item.version === 'Dasai Reguler' ? 'selected' : ''}>Dasai Reguler</option>
+                            <option value="Liberty Walk" ${item.version === 'Liberty Walk' ? 'selected' : ''}>Liberty Walk</option>
+                            <option value="GTR" ${item.version === 'GTR' ? 'selected' : ''}>GTR</option>
+                        </select>
+                        <input type="text" value="${item.color || ''}" placeholder="Warna" data-field="color" data-index="${index}">
+                    </div>
+                `;
+                container.appendChild(editItem);
             });
 
-            alert('Data berhasil diperbarui!');
+            // Add event listeners for real-time updates
+            container.querySelectorAll('input, select').forEach(element => {
+                element.addEventListener('input', updateQueueItem);
+            });
+        }
+
+        // Update queue item in memory
+        function updateQueueItem(event) {
+            const index = parseInt(event.target.dataset.index);
+            const field = event.target.dataset.field;
+            const value = field === 'number' ? parseInt(event.target.value) || 0 : event.target.value;
+
+            if (currentQueue[index]) {
+                currentQueue[index][field] = value;
+            }
+        }
+
+        // Add new queue item
+        document.getElementById('addQueueBtn').addEventListener('click', function () {
+            const name = document.getElementById('newName').value.trim();
+            const number = parseInt(document.getElementById('newNumber').value) || 0;
+            const status = document.getElementById('newStatus').value;
+            const version = document.getElementById('newVersion').value;
+            const color = document.getElementById('newColor').value.trim();
+
+            if (!name || !number || !color) {
+                showMessage('Harap isi semua field untuk menambah antrian!', 'error');
+                return;
+            }
+
+            // Check if number already exists
+            const numberExists = currentQueue.some(item => item.number === number);
+            if (numberExists) {
+                showMessage('Nomor antrian sudah ada! Gunakan nomor yang berbeda.', 'error');
+                return;
+            }
+
+            const newItem = { name, number, status, version, color };
+            currentQueue.push(newItem);
+
+            // Clear form
+            document.getElementById('newName').value = '';
+            document.getElementById('newNumber').value = '';
+            document.getElementById('newStatus').value = 'belum';
+            document.getElementById('newVersion').value = 'Dasai Reguler';
+            document.getElementById('newColor').value = '';
+
+            populateEditForm();
+            showMessage('Antrian baru berhasil ditambahkan!', 'success');
         });
 
-        loadData();
+        // Delete queue item
+        function deleteQueueItem(index) {
+            if (confirm(`Apakah Anda yakin ingin menghapus antrian ${currentQueue[index].name}?`)) {
+                currentQueue.splice(index, 1);
+                populateEditForm();
+                showMessage('Antrian berhasil dihapus!', 'success');
+            }
+        }
+
+        // Save all changes
+        document.getElementById('saveAllBtn').addEventListener('click', async function () {
+            try {
+                const poDatetime = document.getElementById('poDatetime').value || new Date().toISOString().slice(0, 16);
+
+                // Sort queue by number
+                currentQueue.sort((a, b) => a.number - b.number);
+
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Master-Key": MASTER_KEY
+                    },
+                    body: JSON.stringify({
+                        poDatetime: poDatetime,
+                        queue: currentQueue
+                    })
+                });
+
+                if (response.ok) {
+                    showMessage('Semua perubahan berhasil disimpan!', 'success');
+                    // Reload main display
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else {
+                    throw new Error('Gagal menyimpan data');
+                }
+            } catch (error) {
+                showMessage('Error menyimpan data: ' + error.message, 'error');
+            }
+        });
+
+        // Show message
+        function showMessage(message, type) {
+            const existingMessage = document.querySelector('.success-message, .error-message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type === 'success' ? 'success-message' : 'error-message';
+            messageDiv.textContent = message;
+
+            const adminSection = document.getElementById('adminSection');
+            adminSection.insertBefore(messageDiv, adminSection.firstChild);
+
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 3000);
+        }
+
+        // Original countdown functionality
+        fetch('https://api.jsonbin.io/v3/b/687cf3f8ee4b395e61f241bc/latest', {
+            headers: {
+                'X-Master-Key': '$2a$10$dXo6oKsaLDFUYI4RQmujxuGdKk7MOTAycYzcOwgMnAjPXAaJC9GuK'
+            }
+        })
+            .then(res => res.json())
+            .then(json => {
+                const poDatetime = new Date(json.record.poDatetime);
+                const queue = json.record.queue || [];
+
+                const countdownTextEl = document.getElementById('countdownText');
+                const processInfoEl = document.getElementById('processInfo');
+                const queueTableBodyEl = document.getElementById('queueTableBody');
+
+                function updateCountdownQueue() {
+                    const now = new Date();
+                    let countdownText = '';
+
+                    if (poDatetime > now) {
+                        const diffMs = poDatetime - now;
+                        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                        const diffHours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+                        const diffMinutes = Math.floor((diffMs / (1000 * 60)) % 60);
+                        const diffSeconds = Math.floor((diffMs / 1000) % 60);
+
+                        countdownText = `PO tersedia dalam ${diffDays} hari ${diffHours} jam ${diffMinutes} menit ${diffSeconds} detik`;
+                    } else {
+                        countdownText = 'PO SUDAH TERSEDIA!';
+                    }
+
+                    // Hitung statistik antrian
+                    const queueInProcess = queue.filter(q => q.status === 'proses').length;
+                    const queueCompleted = queue.filter(q => q.status === 'selesai').length;
+                    const queuePending = queue.filter(q => q.status === 'belum').length;
+
+                    countdownTextEl.innerHTML = countdownText;
+                    processInfoEl.innerHTML = `
+                    Sedang mengerjakan <strong>${queueInProcess}</strong> preorder | 
+                    Selesai: <strong>${queueCompleted}</strong> | 
+                    Menunggu: <strong>${queuePending}</strong>
+                `;
+
+                    // Buat tabel antrian
+                    let tableRows = '';
+                    queue.forEach((q, i) => {
+                        const statusClass = `status-${q.status}`;
+                        tableRows += `
+                        <tr class="${statusClass}">
+                            <td><strong>${i + 1}</strong></td>
+                            <td>${q.name || '-'}</td>
+                            <td>${q.number || '-'}</td>
+                            <td>${q.version || '-'}</td>
+                            <td>${q.color || '-'}</td>
+                            <td>
+                                <span class="status-badge ${q.status}">
+                                    ${q.status}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                    });
+
+                    if (queue.length === 0) {
+                        tableRows = `
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 20px; color: #666;">
+                                Belum ada antrian
+                            </td>
+                        </tr>
+                    `;
+                    }
+
+                    queueTableBodyEl.innerHTML = tableRows;
+                }
+
+                updateCountdownQueue();
+                setInterval(updateCountdownQueue, 1000);
+            })
+            .catch(err => {
+                console.error('Gagal mengambil data dari JSONBin:', err);
+                document.getElementById('countdownText').innerHTML = 'Error memuat data';
+                document.getElementById('processInfo').innerHTML = 'Gagal mengambil informasi dari server';
+                document.getElementById('queueTableBody').innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 20px; color: #ff6666;">
+                        Gagal memuat data antrian
+                    </td>
+                </tr>
+            `;
+            });
     </script>
+</body>
+
+</html>
