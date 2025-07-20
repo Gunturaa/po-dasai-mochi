@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Projects</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0f0f1a;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: rgba(15, 15, 26, 0.95) !important;
+            box-shadow: 0 2px 30px rgba(106, 17, 203, 0.2);
+            transition: all 0.4s;
+            border-bottom: 1px solid rgba(106, 17, 203, 0.3);
+        }
+
+        .navbar.scrolled {
+            box-shadow: 0 5px 25px rgba(106, 17, 203, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-link {
+            color: #e0e0e0 !important;
+            position: relative;
+            margin: 0 10px;
+            font-weight: 500;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #00f2fe;
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 3rem 1rem 2rem 1rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 3rem;
+            color: #00f2fe;
+            text-shadow: 0 0 10px #00f2fe, 0 0 20px #00f2fe, 0 0 30px #6a11cb;
+        }
+
+        .projects-container {
+            max-width: 1200px;
+            margin: 0 auto 4rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: rgba(30, 30, 45, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 0 15px #00f2fe;
+            border: 1px solid #00f2fe;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 30px #00f2fe, 0 0 40px #6a11cb;
+        }
+
+        .project-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid #00f2fe;
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover .project-image {
+            transform: scale(1.05);
+        }
+
+        .project-content {
+            padding: 1rem 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #00f2fe;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px #00f2fe;
+        }
+
+        .project-description {
+            flex-grow: 1;
+            color: #c0c0c0;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-link {
+            align-self: flex-start;
+            color: #6a11cb;
+            font-weight: 600;
+            text-decoration: none;
+            border: 2px solid #6a11cb;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px #6a11cb;
+        }
+
+        .project-link:hover {
+            background-color: #6a11cb;
+            color: #fff;
+            box-shadow: 0 0 20px #00f2fe;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #888;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(106, 17, 203, 0.3);
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="images/logo.png" alt="PO Dasai Mochi" height="40" class="d-inline-block align-top" />
+                <span class="ms-2 d-none d-lg-inline" style="font-family: 'Orbitron', sans-serif;">DASAI MOCHI</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Beranda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="project.html">Projects</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-header" data-aos="fade-down" data-aos-duration="1000">
+        Projects Saya
+    </header>
+
+    <main class="projects-container" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
+        <article class="project-card">
+            <img src="images/navigasi.jpg" alt="Project 1" class="project-image" />
+            <div class="project-content">
+                <h3 class="project-title">Display Tft 240x240 NavigasiMaps</h3>
+                <p class="project-description">martwatch custom berbasis ESP32 + layar TFT ST7789 240x240 dengan koneksi
+                    ke aplikasi Chronos Android via BLE. Menampilkan jam, notifikasi, status baterai, cuaca, dan
+                    navigasi maps.</p>
+                </p>
+                <a href="https://github.com/Gunturaa/navigasiesp32.git" target="_blank" class="project-link">Lihat di
+                    GitHub</a>
+            </div>
+        </article>
+
+        <article class="project-card">
+            <img src="images/espc3.jpg" alt="Project 2" class="project-image" />
+            <div class="project-content">
+                <h3 class="project-title">Dasai Mochi, Jam, Cuaca</h3>
+                <p class="project-description">Animasi dasai mochi, jam, cuaca dengan esp32c3supermini dan oled 0,96
+                </p>
+                <a href="https://github.com/Gunturaa/dasaiesp32c3.git" target="_blank" class="project-link">Lihat di
+                    GitHub</a>
+            </div>
+        </article>
+
+        <article class="project-card">
+            <img src="images/icibot.jpg" alt="Project 3" class="project-image" />
+            <div class="project-content">
+                <h3 class="project-title">Robot AI dan Animasi Mata</h3>
+                <p class="project-description">Robot AI yang dibuat dengan fitur Live harga BTC, Sensor suhu DHT11, JAM,
+                    AI gemini API </p>
+                <a href="https://github.com/Gunturaa/esp32bot.git" target="_blank" class="project-link">Lihat di
+                    GitHub</a>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        &copy; 2025 PO Dasai Mochi. All rights reserved.
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+    </script>
+</body>
+
+</html>

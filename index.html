@@ -530,6 +530,70 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--primary-light);
         }
+
+        /* Tombol FAQ (pertanyaan) */
+        .glow-btn {
+            background-color: #1f1f2e;
+            color: #fff;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(106, 17, 203, 0.3);
+            border: none;
+            padding: 12px 20px;
+        }
+
+        /* Saat dibuka */
+        .glow-btn:not(.collapsed) {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: #000;
+            /* teks pertanyaan saat aktif */
+            box-shadow: 0 0 20px #6a11cb;
+        }
+
+        /* Isi jawaban */
+        .accordion-body {
+            background-color: #151524;
+            /* latar gelap */
+            color: #e6e6e6;
+            /* teks putih soft */
+            padding: 20px;
+            font-size: 1rem;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            box-shadow: inset 0 0 10px rgba(106, 17, 203, 0.2);
+        }
+
+        /* Border antar item */
+        .accordion-item {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            background-color: #121222;
+        }
+
+        /* Tambahan glowing frame halus */
+        .accordion {
+            box-shadow: 0 0 25px rgba(106, 17, 203, 0.2);
+        }
+
+        /* Tambahkan animasi slide in */
+        .accordion-body {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -556,10 +620,13 @@
                         <a class="nav-link" href="#products">Produk</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#video">Video</a>
+                        <a class="nav-link" href="video-tutorial.html">Video Tutorial</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#order">Pesan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="project.html">Projects</a>
                     </li>
                 </ul>
             </div>
@@ -632,6 +699,99 @@
             </div>
         </div>
     </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-5" style="background: linear-gradient(to bottom, #0f0f1a, #1a1a2e);">
+        <div class="container py-5">
+            <div class="section-title text-center mb-5" data-aos="fade-up">
+                <h2 style="color: #ffffff;">PERTANYAAN UMUM</h2>
+                <p class="lead text-muted">Temukan jawaban atas pertanyaan yang sering diajukan</p>
+            </div>
+
+            <div class="accordion accordion-flush" id="faqAccordion">
+                <!-- Item 1 -->
+                <div class="accordion-item mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed glow-btn" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq1">
+                            Berapa lama proses pengerjaan?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            Estimasi pengerjaan sekitar <strong>7 hari kerja</strong>, karena sebagian besar komponen
+                            hardware kami pesan secara online.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="accordion-item mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed glow-btn" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq2">
+                            Apakah bisa request animasi sendiri?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            Ya, Anda dapat mengajukan request animasi khusus. Namun, mohon diperhatikan bahwa beberapa
+                            fitur seperti <em>touch sensor</em>, <em>navigasi Maps/Jam</em>, atau <em>suara buzzer
+                                aktif</em> mungkin tidak tersedia pada versi kustom.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="accordion-item mb-4" data-aos="fade-up" data-aos-delay="300">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed glow-btn" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq3">
+                            Apakah bisa melakukan pembayaran COD?
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            Ya, metode pembayaran <strong>COD (Bayar di Tempat)</strong> tersedia khusus untuk area
+                            <strong>Yogyakarta</strong> dan sekitarnya.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="accordion-item mb-4" data-aos="fade-up" data-aos-delay="400">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed glow-btn" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq4">
+                            Produk dikirim dari mana?
+                        </button>
+                    </h2>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            Semua pesanan dikirim langsung dari <strong>Condongcatur, Sleman – Yogyakarta</strong>.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 5 -->
+                <div class="accordion-item mb-4" data-aos="fade-up" data-aos-delay="500">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed glow-btn" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq5">
+                            Dimana saya bisa melakukan pembelian?
+                        </button>
+                    </h2>
+                    <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            Pembelian dapat dilakukan secara aman melalui <a href="https://shopee.co.id/gunturtriatma"
+                                target="_blank" class="text-primary">Shopee: @gunturtriatma</a>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 
     <!-- Products Section -->
     <section id="products" class="py-5" style="background: linear-gradient(to bottom, #0f0f1a, #1a1a2e);">
