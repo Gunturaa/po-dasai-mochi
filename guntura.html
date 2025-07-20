@@ -7,121 +7,132 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
-            font-family: Arial, sans-serif;
             background-color: #0f0f1a;
+            font-family: 'Segoe UI', sans-serif;
             color: white;
             padding: 2rem;
         }
 
-        .container {
-            max-width: 500px;
-            margin: auto;
+        #antrianForm {
             background-color: #1a1a2e;
             padding: 2rem;
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(106, 17, 203, 0.6);
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 0 20px rgba(106, 17, 203, 0.5);
+        }
+
+        h3 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #00eaff;
+        }
+
+        #antrianInputs div {
+            border: 1px solid #333;
+            background-color: #22223a;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
         }
 
         input,
-        button {
+        select {
             width: 100%;
-            margin-top: 1rem;
-            padding: 0.75rem;
-            font-size: 1rem;
-            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            padding: 0.6rem;
             border: none;
-        }
-
-        input {
-            background-color: #222;
+            border-radius: 5px;
+            background-color: #2b2b44;
             color: white;
         }
 
-        button {
+        button[type="submit"] {
+            width: 100%;
             background: linear-gradient(to right, #6a11cb, #2575fc);
             color: white;
             font-weight: bold;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
         }
 
-        button:hover {
+        button[type="submit"]:hover {
             box-shadow: 0 0 10px #6a11cb;
         }
-
-        .message {
-            margin-top: 1rem;
-            font-weight: bold;
-            color: #00ff99;
-        }
     </style>
-</head>
 
-<body>
-    <div class="container">
-        <h2>Update PO & Antrian</h2>
-        <form id="gunturaForm">
-            <label for="poDatetime">Tanggal & Waktu PO:</label>
-            <input type="datetime-local" id="poDatetime" name="poDatetime" required>
-
-            <label for="queueNumber">Nomor Antrian:</label>
-            <input type="number" id="queueNumber" name="queueNumber" min="0" required>
-
-            <button type="submit">Simpan ke JSONBin</button>
-        </form>
-
-        <div class="message" id="message"></div>
-    </div>
+    <form id="antrianForm">
+        <h3>Tambah/Edit Antrian</h3>
+        <label for="poDatetime">Tanggal & Waktu PO:</label>
+        <input type="datetime-local" id="poDatetime" name="poDatetime" required>
+        <div id="antrianInputs"></div>
+        <button type="submit">Simpan Semua</button>
+    </form>
 
     <script>
         const BIN_ID = "687cf3f8ee4b395e61f241bc";
         const MASTER_KEY = "$2a$10$dXo6oKsaLDFUYI4RQmujxuGdKk7MOTAycYzcOwgMnAjPXAaJC9GuK";
 
-        document.getElementById('gunturaForm').addEventListener('submit', async function (e) {
+        async function loadData() {
+            const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                headers: { "X-Master-Key": MASTER_KEY }
+            });
+            const data = await res.json();
+            document.getElementById('poDatetime').value = data.record.poDatetime || new Date().toISOString().slice(0, 16);
+            populateForm(data.record.queue || []);
+        }
+
+        function populateForm(queue) {
+            const container = document.getElementById('antrianInputs');
+            container.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                const q = queue[i] || { name: '', number: '', status: 'belum', version: 'Dasai Reguler', color: '' };
+                container.innerHTML += `
+        <div>
+          <input type="text" name="name${i}" placeholder="Nama" value="${q.name}">
+          <input type="number" name="number${i}" placeholder="Nomor Antrian" value="${q.number}">
+          <select name="status${i}" style="color: ${q.status === 'proses' ? '#ffcc00' : q.status === 'selesai' ? '#00ff99' : '#ff6666'}">
+            <option value="belum" ${q.status === 'belum' ? 'selected' : ''}>belum</option>
+            <option value="proses" ${q.status === 'proses' ? 'selected' : ''}>proses</option>
+            <option value="selesai" ${q.status === 'selesai' ? 'selected' : ''}>selesai</option>
+          </select>
+          <select name="version${i}" style="color: ${q.version === 'Liberty Walk' ? '#ff00ff' : q.version === 'GTR' ? '#00ccff' : '#ffffff'}">
+            <option value="Dasai Reguler" ${q.version === 'Dasai Reguler' ? 'selected' : ''}>Dasai Reguler</option>
+            <option value="Liberty Walk" ${q.version === 'Liberty Walk' ? 'selected' : ''}>Liberty Walk</option>
+            <option value="GTR" ${q.version === 'GTR' ? 'selected' : ''}>GTR</option>
+          </select>
+          <input type="text" name="color${i}" placeholder="Warna" value="${q.color || ''}">
+        </div>
+      `;
+            }
+        }
+
+        document.getElementById('antrianForm').addEventListener('submit', async function (e) {
             e.preventDefault();
+            const inputs = [...document.querySelectorAll('#antrianInputs div')];
+            const queue = inputs.map((div, i) => ({
+                name: div.querySelector(`input[name='name${i}']`).value,
+                number: parseInt(div.querySelector(`input[name='number${i}']`).value),
+                status: div.querySelector(`select[name='status${i}']`).value,
+                version: div.querySelector(`select[name='version${i}']`).value,
+                color: div.querySelector(`input[name='color${i}']`).value
+            }));
 
-            const poDatetime = document.getElementById('poDatetime').value;
-            const queueNumber = document.getElementById('queueNumber').value;
+            const poDatetime = document.getElementById("poDatetime").value || new Date().toISOString();
 
-            const data = {
-                poDatetime,
-                queueNumber
-            };
+            await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Master-Key": MASTER_KEY
+                },
+                body: JSON.stringify({ poDatetime, queue })
+            });
 
-            try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-Master-Key": MASTER_KEY,
-                        "X-Bin-Private": "false"
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                const json = await res.json();
-
-                document.getElementById('message').textContent = "✅ Data berhasil diperbarui!";
-            } catch (err) {
-                document.getElementById('message').textContent = "❌ Gagal menyimpan data: " + err.message;
-            }
+            alert('Data berhasil diperbarui!');
         });
 
-        // Load existing data into the form
-        window.addEventListener("DOMContentLoaded", async () => {
-            try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-                    headers: { "X-Master-Key": MASTER_KEY }
-                });
-                const json = await res.json();
-                const data = json.record;
-
-                if (data.poDatetime) document.getElementById('poDatetime').value = data.poDatetime;
-                if (data.queueNumber) document.getElementById('queueNumber').value = data.queueNumber;
-            } catch (err) {
-                console.error("Gagal mengambil data:", err);
-            }
-        });
+        loadData();
     </script>
-</body>
-
-</html>

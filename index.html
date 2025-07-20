@@ -2,21 +2,21 @@
 <html lang="id">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PO Dasai Mochi - DIY lokal</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PO Dasai Mochi - Premium Car Animation</title>
     <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
+        rel="stylesheet" />
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Animate CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <!-- AOS CSS -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
     <!-- Custom CSS -->
     <style>
         :root {
@@ -39,48 +39,164 @@
             scroll-behavior: smooth;
         }
 
-        /* Tambahkan ini di dalam bagian CSS Anda */
+        .countdown-section {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            border-radius: 15px;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
 
-        /* Mengubah teks hitam menjadi putih */
-        body {
+        .countdown-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .process-info {
+            font-size: 1.4rem;
+            color: #00f2fe;
+            text-shadow: 0 0 10px #00f2fe;
+        }
+
+        /* Table Styles */
+        #countdownQueue table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
             color: #ffffff;
-            /* Mengubah dari #e0e0e0 ke #ffffff untuk putih murni */
+            font-weight: 600;
+            text-shadow: 0 0 5px #6a11cb;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        /* Memperbaiki kontras pada elemen form */
-        .form-control,
-        .form-select,
-        .form-check-input,
-        .form-check-label {
-            color: #ffffff !important;
+        #countdownQueue thead tr {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
         }
 
-        /* Memastikan teks pada card berwarna putih */
-        .product-card,
-        .product-card .card-title,
-        .product-card .card-text,
-        .product-card .list-group-item {
-            color: #ffffff !important;
+        #countdownQueue th {
+            padding: 15px 10px;
+            border: 1px solid #444;
+            text-align: center;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        /* Memperbaiki warna teks pada list items */
-        .list-group-item {
-            color: #ffffff;
-            background-color: rgba(30, 30, 45, 0.5);
+        #countdownQueue td {
+            padding: 12px 10px;
+            border: 1px solid #444;
+            text-align: center;
+            font-size: 1rem;
         }
 
-        /* Memperbaiki warna teks pada section features */
-        .text-muted {
-            color: rgba(255, 255, 255, 0.7) !important;
+        #countdownQueue tbody tr {
+            background: #111122;
+            transition: all 0.3s ease;
         }
 
-        /* Memperbaiki warna teks pada footer */
-        footer,
-        footer a:not(.btn) {
-            color: #ffffff;
+        #countdownQueue tbody tr:hover {
+            background: #1a1a2e;
+            transform: translateY(-2px);
         }
 
-        /* Memperbaiki warna teks pada tombol gold */
+        /* Status-based row styling */
+        .status-belum {
+            color: #ff6666;
+            box-shadow: inset 0 0 10px rgba(255, 102, 102, 0.3);
+            background: linear-gradient(90deg, #111122, #331111) !important;
+        }
+
+        .status-proses {
+            color: #ffcc00;
+            box-shadow: inset 0 0 10px rgba(255, 204, 0, 0.3);
+            background: linear-gradient(90deg, #111122, #332211) !important;
+            animation: pulse-yellow 2s infinite;
+        }
+
+        .status-selesai {
+            color: #00ff99;
+            box-shadow: inset 0 0 10px rgba(0, 255, 153, 0.3);
+            background: linear-gradient(90deg, #111122, #113322) !important;
+        }
+
+        /* Status badge styling */
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .status-badge.belum {
+            background: linear-gradient(45deg, #ff4757, #ff3838);
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 71, 87, 0.6);
+        }
+
+        .status-badge.proses {
+            background: linear-gradient(45deg, #ffa502, #ff6348);
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 165, 2, 0.6);
+        }
+
+        .status-badge.selesai {
+            background: linear-gradient(45deg, #2ed573, #1e90ff);
+            color: white;
+            box-shadow: 0 0 15px rgba(46, 213, 115, 0.6);
+        }
+
+        /* Pulse animation for processing items */
+        @keyframes pulse-yellow {
+
+            0%,
+            100% {
+                box-shadow: inset 0 0 10px rgba(255, 204, 0, 0.3);
+            }
+
+            50% {
+                box-shadow: inset 0 0 20px rgba(255, 204, 0, 0.6);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .countdown-text {
+                font-size: 1.4rem;
+            }
+
+            .process-info {
+                font-size: 1.2rem;
+            }
+
+            #countdownQueue th,
+            #countdownQueue td {
+                padding: 8px 5px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .queue-title {
+            color: #00f2fe;
+            font-size: 1.6rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px #00f2fe;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
         .btn-gold {
             color: #121212;
             /* Tetap gelap untuk kontras dengan latar emas */
@@ -614,6 +730,9 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
+                        <a class="nav-link" href="#antrian">Antrian</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="#features">Fitur</a>
                     </li>
                     <li class="nav-item">
@@ -650,11 +769,6 @@
                             <i class="fas fa-shopping-cart me-2"></i> Pesan Sekarang
                         </a>
                     </div>
-
-                    <!-- Countdown and Queue Display -->
-                    <div id="countdownQueue" class="mt-4"
-                        style="font-size: 1.25rem; font-weight: 600; color: #00f2fe; text-shadow: 0 0 10px #00f2fe;">
-                    </div>
                 </div>
                 <div class="col-lg-6 d-none d-lg-block" data-aos="fade-left" data-aos-duration="1000">
                     <img src="images/bg.jpg" alt="Dasai Mochi Car" class="img-fluid floating"
@@ -663,6 +777,40 @@
             </div>
         </div>
     </header>
+
+    <!-- Countdown and Queue Section -->
+    <section id="antrian" class="py-5" style="background: linear-gradient(to bottom, #1a1a2e, #0f0f1a);">
+        <div class="container py-5">
+            <div class="countdown-section text-center mb-4">
+                <div id="countdownText" class="countdown-text">Memuat...</div>
+                <div id="processInfo" class="process-info">Memuat informasi...</div>
+            </div>
+
+            <div class="queue-title">Daftar Antrian Preorder</div>
+
+            <div id="countdownQueue">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama</th>
+                            <th>Nomor</th>
+                            <th>Versi</th>
+                            <th>Warna</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="queueTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 20px;">
+                                Memuat data antrian...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
 
     <!-- Features Section -->
     <section id="features" class="py-5" style="background-color: #0f0f1a;">
@@ -1319,14 +1467,16 @@
             .then(res => res.json())
             .then(json => {
                 const poDatetime = new Date(json.record.poDatetime);
-                const queueNumber = json.record.queueNumber;
+                const queue = json.record.queue || [];
 
-                const countdownQueueEl = document.getElementById('countdownQueue');
-                if (!countdownQueueEl) return;
+                const countdownTextEl = document.getElementById('countdownText');
+                const processInfoEl = document.getElementById('processInfo');
+                const queueTableBodyEl = document.getElementById('queueTableBody');
 
                 function updateCountdownQueue() {
                     const now = new Date();
                     let countdownText = '';
+
                     if (poDatetime > now) {
                         const diffMs = poDatetime - now;
                         const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -1334,13 +1484,54 @@
                         const diffMinutes = Math.floor((diffMs / (1000 * 60)) % 60);
                         const diffSeconds = Math.floor((diffMs / 1000) % 60);
 
-                        countdownText = `PO tersedia dalam ${diffDays} hari ${diffHours} jam ${diffMinutes} menit ${diffSeconds} detik.`;
+                        countdownText = `PO tersedia dalam ${diffDays} hari ${diffHours} jam ${diffMinutes} menit ${diffSeconds} detik`;
                     } else {
-                        countdownText = 'PO sudah tersedia.';
+                        countdownText = 'PO SUDAH TERSEDIA!';
                     }
 
-                    countdownText += ` Sedang mengerjakan ${queueNumber} preorder.`;
-                    countdownQueueEl.textContent = countdownText;
+                    // Hitung statistik antrian
+                    const queueInProcess = queue.filter(q => q.status === 'proses').length;
+                    const queueCompleted = queue.filter(q => q.status === 'selesai').length;
+                    const queuePending = queue.filter(q => q.status === 'belum').length;
+
+                    countdownTextEl.innerHTML = countdownText;
+                    processInfoEl.innerHTML = `
+                    Sedang mengerjakan <strong>${queueInProcess}</strong> preorder | 
+                    Selesai: <strong>${queueCompleted}</strong> | 
+                    Menunggu: <strong>${queuePending}</strong>
+                `;
+
+                    // Buat tabel antrian
+                    let tableRows = '';
+                    queue.forEach((q, i) => {
+                        const statusClass = `status-${q.status}`;
+                        tableRows += `
+                        <tr class="${statusClass}">
+                            <td><strong>${i + 1}</strong></td>
+                            <td>${q.name || '-'}</td>
+                            <td>${q.number || '-'}</td>
+                            <td>${q.version || '-'}</td>
+                            <td>${q.color || '-'}</td>
+                            <td>
+                                <span class="status-badge ${q.status}">
+                                    ${q.status}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                    });
+
+                    if (queue.length === 0) {
+                        tableRows = `
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 20px; color: #666;">
+                                Belum ada antrian
+                            </td>
+                        </tr>
+                    `;
+                    }
+
+                    queueTableBodyEl.innerHTML = tableRows;
                 }
 
                 updateCountdownQueue();
@@ -1348,7 +1539,17 @@
             })
             .catch(err => {
                 console.error('Gagal mengambil data dari JSONBin:', err);
+                document.getElementById('countdownText').innerHTML = 'Error memuat data';
+                document.getElementById('processInfo').innerHTML = 'Gagal mengambil informasi dari server';
+                document.getElementById('queueTableBody').innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 20px; color: #ff6666;">
+                        Gagal memuat data antrian
+                    </td>
+                </tr>
+            `;
             });
+
 
     </script>
 </body>
