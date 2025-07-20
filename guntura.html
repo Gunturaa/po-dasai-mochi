@@ -385,6 +385,76 @@
                 opacity: 1;
             }
         }
+
+        /* Password Modal Styles */
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .password-modal.active {
+            display: flex;
+        }
+
+        .password-box {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .password-box h3 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .password-box input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+
+        .password-box button {
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #2ed573, #1e90ff);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .password-box button:hover {
+            background: linear-gradient(45deg, #1e90ff, #2ed573);
+            box-shadow: 0 0 15px rgba(46, 213, 115, 0.5);
+        }
+
+        .password-error {
+            color: #ffcc00;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            display: none;
+        }
     </style>
 </head>
 
@@ -465,16 +535,63 @@
         </div>
     </div>
 
+    <!-- Password Modal -->
+    <div id="passwordModal" class="password-modal">
+        <div class="password-box">
+            <h3>Masukkan Password Admin</h3>
+            <input type="password" id="adminPassword" placeholder="Password">
+            <button id="submitPassword">Masuk</button>
+            <div id="passwordError" class="password-error">Password salah! Coba lagi.</div>
+        </div>
+    </div>
+
     <script>
         const BIN_ID = "687cf3f8ee4b395e61f241bc";
         const MASTER_KEY = "$2a$10$dXo6oKsaLDFUYI4RQmujxuGdKk7MOTAycYzcOwgMnAjPXAaJC9GuK";
+        const ADMIN_PASSWORD = "Asusmaxprom1"; // Password untuk admin panel
 
         let currentQueue = [];
         let currentPoDatetime = '';
+        let isAuthenticated = false;
 
-        // Toggle Admin Panel
-        document.getElementById('toggleAdminBtn').addEventListener('click', function () {
-            const adminSection = document.getElementById('adminSection');
+        // DOM Elements
+        const passwordModal = document.getElementById('passwordModal');
+        const adminPassword = document.getElementById('adminPassword');
+        const submitPassword = document.getElementById('submitPassword');
+        const passwordError = document.getElementById('passwordError');
+        const toggleAdminBtn = document.getElementById('toggleAdminBtn');
+        const adminSection = document.getElementById('adminSection');
+
+        // Password verification
+        submitPassword.addEventListener('click', function () {
+            if (adminPassword.value === ADMIN_PASSWORD) {
+                isAuthenticated = true;
+                passwordModal.classList.remove('active');
+                adminPassword.value = '';
+                passwordError.style.display = 'none';
+            } else {
+                passwordError.style.display = 'block';
+                adminPassword.value = '';
+            }
+        });
+
+        // Close modal when clicking outside
+        passwordModal.addEventListener('click', function (e) {
+            if (e.target === passwordModal) {
+                passwordModal.classList.remove('active');
+                adminPassword.value = '';
+                passwordError.style.display = 'none';
+            }
+        });
+
+        // Toggle Admin Panel with password protection
+        toggleAdminBtn.addEventListener('click', function () {
+            if (!isAuthenticated) {
+                passwordModal.classList.add('active');
+                adminPassword.focus();
+                return;
+            }
+
             const toggleText = document.getElementById('toggleText');
 
             if (adminSection.classList.contains('hidden')) {
