@@ -57,4 +57,41 @@ document.addEventListener('DOMContentLoaded', function () {
             navbar.classList.remove('navbar-scrolled');
         }
     });
+
+    // Countdown and Queue display logic for index.html
+    function updateCountdownQueue() {
+        const countdownQueueEl = document.getElementById('countdownQueue');
+        if (!countdownQueueEl) return;
+
+        const poDatetimeStr = localStorage.getItem('poDatetime');
+        const queueNumberStr = localStorage.getItem('queueNumber');
+
+        if (!poDatetimeStr || !queueNumberStr) {
+            countdownQueueEl.textContent = 'Data PO dan antrian belum diatur.';
+            return;
+        }
+
+        const poDatetime = new Date(poDatetimeStr);
+        const now = new Date();
+
+        let countdownText = '';
+        if (poDatetime > now) {
+            const diffMs = poDatetime - now;
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const diffHours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+            const diffMinutes = Math.floor((diffMs / (1000 * 60)) % 60);
+            const diffSeconds = Math.floor((diffMs / 1000) % 60);
+
+            countdownText = `PO tersedia dalam ${diffDays} hari ${diffHours} jam ${diffMinutes} menit ${diffSeconds} detik.`;
+        } else {
+            countdownText = 'PO sudah tersedia.';
+        }
+
+        countdownText += ` Sedang mengerjakan antrian nomor: ${queueNumberStr}.`;
+
+        countdownQueueEl.textContent = countdownText;
+    }
+
+    updateCountdownQueue();
+    setInterval(updateCountdownQueue, 1000);
 });
