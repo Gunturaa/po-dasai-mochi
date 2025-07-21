@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Video Tutorial - PO Dasai Mochi</title>
+    <title>Video Tutorial - Dasai Mochi</title>
     <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
@@ -163,6 +163,181 @@
     </style>
 </head>
 
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Tutorial - PO Dasai Mochi</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            color: #fff !important;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0 0.5rem;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #667eea !important;
+            transform: translateY(-2px);
+        }
+
+        .page-header {
+            margin-top: 100px;
+            text-align: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 3rem;
+        }
+
+        .videos-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .video-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .video-player {
+            width: 100%;
+            height: 200px;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            background: #000;
+        }
+
+        .video-content {
+            color: white;
+        }
+
+        .video-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .video-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .video-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .video-link:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        /* Modal Styles */
+        .modal-content {
+            background: rgba(0, 0, 0, 0.95);
+            border: none;
+            border-radius: 15px;
+        }
+
+        .modal-body {
+            padding: 0;
+        }
+
+        .modal-video {
+            width: 100%;
+            height: 400px;
+            border-radius: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .videos-container {
+                grid-template-columns: 1fr;
+                padding: 0 1rem 2rem;
+            }
+
+            .modal-video {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
@@ -195,34 +370,41 @@
     </header>
 
     <main class="videos-container" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
-        <!-- Contoh kartu video tutorial, user dapat mengganti isi ini dengan video internal -->
+        <!-- Video Card 1 - Inline Video Player -->
         <article class="video-card">
-            <img src="images/video-placeholder.jpg" alt="Video Tutorial 1" class="video-thumbnail" />
+            <video class="video-player" controls poster="images/video-thumbnail1.jpg">
+                <source src="images/tutor.mp4" type="video/mp4">
+                Video Anda tidak didukung oleh browser ini.
+            </video>
             <div class="video-content">
-                <h3 class="video-title">Video Tutorial 1</h3>
-                <p class="video-description">Deskripsi singkat video tutorial pertama.</p>
-                <a href="#" class="video-link">Tonton Video</a>
+                <h3 class="video-title">Tutorial</h3>
+                <p class="video-description">Pastikan Koneksi Internet Lancar.</p>
+                <a href="#" class="video-link" data-bs-toggle="modal" data-bs-target="#videoModal1">Tonton
+                    Fullscreen</a>
             </div>
         </article>
 
-        <article class="video-card">
-            <img src="images/video-placeholder.jpg" alt="Video Tutorial 2" class="video-thumbnail" />
-            <div class="video-content">
-                <h3 class="video-title">Video Tutorial 2</h3>
-                <p class="video-description">Deskripsi singkat video tutorial kedua.</p>
-                <a href="#" class="video-link">Tonton Video</a>
-            </div>
-        </article>
 
-        <article class="video-card">
-            <img src="images/video-placeholder.jpg" alt="Video Tutorial 3" class="video-thumbnail" />
-            <div class="video-content">
-                <h3 class="video-title">Video Tutorial 3</h3>
-                <p class="video-description">Deskripsi singkat video tutorial ketiga.</p>
-                <a href="#" class="video-link">Tonton Video</a>
-            </div>
-        </article>
     </main>
+
+    <!-- Modal untuk Video Fullscreen -->
+    <div class="modal fade" id="videoModal1" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white" id="videoModalLabel">Tutorial</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <video class="modal-video" controls>
+                        <source src="images/tutor.mp4" type="video/mp4">
+                        Video Anda tidak didukung oleh browser ini.
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <footer>
         &copy; 2025 PO Dasai Mochi. All rights reserved.
@@ -237,6 +419,27 @@
             duration: 800,
             easing: 'ease-in-out',
             once: true
+        });
+
+        // Pause video when modal is closed
+        document.getElementById('videoModal1').addEventListener('hidden.bs.modal', function () {
+            const video = this.querySelector('video');
+            if (video) {
+                video.pause();
+                video.currentTime = 0;
+            }
+        });
+
+        // Optional: Auto-pause other videos when one starts playing
+        const videos = document.querySelectorAll('video');
+        videos.forEach(video => {
+            video.addEventListener('play', function () {
+                videos.forEach(otherVideo => {
+                    if (otherVideo !== this && !otherVideo.paused) {
+                        otherVideo.pause();
+                    }
+                });
+            });
         });
     </script>
 </body>
