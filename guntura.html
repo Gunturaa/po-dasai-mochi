@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PO Countdown & Queue</title>
+    <title>PO Countdown & Queue - Admin Panel</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -455,6 +455,116 @@
             font-size: 0.9rem;
             display: none;
         }
+
+        /* Finance Section Styles */
+        .finance-section {
+            margin-top: 30px;
+            background: rgba(26, 26, 46, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #444;
+        }
+
+        .finance-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #444;
+        }
+
+        .finance-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: rgba(34, 34, 58, 0.8);
+            border: 1px solid #444;
+            border-bottom: none;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .finance-tab:hover {
+            background: rgba(106, 17, 203, 0.5);
+        }
+
+        .finance-tab.active {
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            color: white;
+        }
+
+        .finance-content {
+            display: none;
+        }
+
+        .finance-content.active {
+            display: block;
+        }
+
+        .finance-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .finance-summary {
+            background: rgba(34, 34, 58, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .finance-summary h4 {
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .finance-summary p {
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .finance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            color: white;
+        }
+
+        .finance-table th,
+        .finance-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+
+        .finance-table th {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            font-weight: bold;
+        }
+
+        .finance-table tr:hover {
+            background: rgba(106, 17, 203, 0.1);
+        }
+
+        .positive {
+            color: #2ed573;
+            font-weight: bold;
+        }
+
+        .negative {
+            color: #ff4757;
+            font-weight: bold;
+        }
+
+        .finance-table .delete-btn {
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 
@@ -507,6 +617,92 @@
 
                     <button type="button" id="saveAllBtn" class="save-btn">Simpan Semua Perubahan</button>
                 </div>
+
+                <!-- Finance Management Section -->
+                <div class="finance-section">
+                    <h3>Manajemen Keuangan</h3>
+
+                    <div class="finance-tabs">
+                        <div class="finance-tab active" data-tab="expense">Pengeluaran</div>
+                        <div class="finance-tab" data-tab="income">Pemasukan</div>
+                        <div class="finance-tab" data-tab="summary">Ringkasan</div>
+                    </div>
+
+                    <!-- Expense Tab -->
+                    <div class="finance-content active" id="expenseTab">
+                        <h4>Tambah Pengeluaran</h4>
+                        <form id="expenseForm" class="finance-form">
+                            <input type="date" id="expenseDate" required placeholder="Tanggal">
+                            <select id="expenseCategory" required>
+                                <option value="" disabled selected>Pilih Kategori</option>
+                                <option value="Bahan Baku">Bahan Baku</option>
+                                <option value="Packing">Packing</option>
+                                <option value="Pengiriman">Pengiriman</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                            <input type="number" id="expenseAmount" required placeholder="Jumlah (Rp)">
+                            <input type="text" id="expenseDescription" placeholder="Keterangan">
+                            <button type="submit" class="add-btn">Tambah Pengeluaran</button>
+                        </form>
+
+                        <h4>Daftar Pengeluaran</h4>
+                        <table class="finance-table" id="expenseTable">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Kategori</th>
+                                    <th>Jumlah</th>
+                                    <th>Keterangan</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Income Tab -->
+                    <div class="finance-content" id="incomeTab">
+                        <h4>Tambah Pemasukan</h4>
+                        <form id="incomeForm" class="finance-form">
+                            <input type="date" id="incomeDate" required placeholder="Tanggal">
+                            <input type="text" id="customerName" required placeholder="Nama Pembeli">
+                            <select id="productType" required>
+                                <option value="" disabled selected>Pilih Produk</option>
+                                <option value="Dasai Regular">Dasai Regular</option>
+                                <option value="Dasai Liberty Walk">Dasai Liberty Walk</option>
+                                <option value="Dasai Liberty GTR">Dasai Liberty GTR</option>
+                            </select>
+                            <input type="number" id="incomeAmount" required placeholder="Jumlah (Rp)">
+                            <button type="submit" class="add-btn">Tambah Pemasukan</button>
+                        </form>
+
+                        <h4>Daftar Pemasukan</h4>
+                        <table class="finance-table" id="incomeTable">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Pembeli</th>
+                                    <th>Produk</th>
+                                    <th>Jumlah</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Summary Tab -->
+                    <div class="finance-content" id="summaryTab">
+                        <div class="finance-summary">
+                            <h4>Ringkasan Keuangan</h4>
+                            <p>Total Pengeluaran: <span id="totalExpense">Rp 0</span></p>
+                            <p>Total Pemasukan: <span id="totalIncome">Rp 0</span></p>
+                            <p>Saldo: <span id="balance">Rp 0</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" id="saveFinanceBtn" class="save-btn">Simpan Semua Data Keuangan</button>
             </div>
         </div>
 
@@ -546,12 +742,19 @@
     </div>
 
     <script>
+        // Configuration
         const BIN_ID = "687cf3f8ee4b395e61f241bc";
+        const FINANCE_BIN_ID = "687d91eecd0c64734cc631b2";
         const MASTER_KEY = "$2a$10$dXo6oKsaLDFUYI4RQmujxuGdKk7MOTAycYzcOwgMnAjPXAaJC9GuK";
-        const ADMIN_PASSWORD = "Asusmaxprom1"; // Password untuk admin panel
+        const ADMIN_PASSWORD = "Asusmaxprom1";
 
+        // Global variables
         let currentQueue = [];
         let currentPoDatetime = '';
+        let financeData = {
+            expenses: [],
+            incomes: []
+        };
         let isAuthenticated = false;
 
         // DOM Elements
@@ -604,25 +807,30 @@
             }
         });
 
-        // Load data for admin panel
+        // Load all admin data
         async function loadAdminData() {
             try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                // Load queue data
+                const queueRes = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
                     headers: { "X-Master-Key": MASTER_KEY }
                 });
-                const data = await res.json();
+                const queueData = await queueRes.json();
 
-                currentQueue = data.record.queue || [];
-                currentPoDatetime = data.record.poDatetime || new Date().toISOString().slice(0, 16);
+                currentQueue = queueData.record.queue || [];
+                currentPoDatetime = queueData.record.poDatetime || new Date().toISOString().slice(0, 16);
 
                 document.getElementById('poDatetime').value = currentPoDatetime;
                 populateEditForm();
+
+                // Load finance data
+                await loadFinanceData();
+
             } catch (error) {
                 showMessage('Error memuat data admin: ' + error.message, 'error');
             }
         }
 
-        // Populate edit form
+        // Queue Management Functions
         function populateEditForm() {
             const container = document.getElementById('editQueueList');
             container.innerHTML = '';
@@ -658,7 +866,6 @@
             });
         }
 
-        // Update queue item in memory
         function updateQueueItem(event) {
             const index = parseInt(event.target.dataset.index);
             const field = event.target.dataset.field;
@@ -712,7 +919,7 @@
             }
         }
 
-        // Save all changes
+        // Save all queue changes
         document.getElementById('saveAllBtn').addEventListener('click', async function () {
             try {
                 const poDatetime = document.getElementById('poDatetime').value || new Date().toISOString().slice(0, 16);
@@ -746,7 +953,206 @@
             }
         });
 
-        // Show message
+        // Finance Management Functions - FIXED VERSION
+        async function loadFinanceData() {
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${FINANCE_BIN_ID}/latest`, {
+                    headers: { "X-Master-Key": MASTER_KEY }
+                });
+                const data = await res.json();
+
+                // Handle both possible JSON structures
+                if (data.record && data.record.financeData) {
+                    financeData = data.record.financeData;
+                } else if (data.record && (data.record.expenses || data.record.incomes)) {
+                    financeData = data.record;
+                } else {
+                    // Initialize with empty data
+                    financeData = { expenses: [], incomes: [] };
+                }
+
+                updateFinanceTables();
+                calculateFinanceSummary();
+            } catch (error) {
+                console.error("Gagal memuat data keuangan:", error);
+                showMessage('Gagal memuat data keuangan', 'error');
+                // Initialize with empty data
+                financeData = { expenses: [], incomes: [] };
+            }
+        }
+
+        async function saveFinanceData() {
+            try {
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${FINANCE_BIN_ID}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Master-Key": MASTER_KEY
+                    },
+                    body: JSON.stringify({
+                        financeData: financeData
+                    })
+                });
+
+                if (response.ok) {
+                    return true;
+                } else {
+                    throw new Error('Gagal menyimpan data keuangan');
+                }
+            } catch (error) {
+                console.error("Gagal menyimpan data keuangan:", error);
+                return false;
+            }
+        }
+
+        function updateFinanceTables() {
+            // Expense table
+            const expenseTable = document.getElementById('expenseTable').querySelector('tbody');
+            expenseTable.innerHTML = '';
+
+            financeData.expenses.forEach((expense, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${expense.date || '-'}</td>
+                    <td>${expense.category || '-'}</td>
+                    <td>Rp ${expense.amount ? expense.amount.toLocaleString('id-ID') : '0'}</td>
+                    <td>${expense.description || '-'}</td>
+                    <td><button class="delete-btn" onclick="deleteFinanceItem('expenses', ${index})">×</button></td>
+                `;
+                expenseTable.appendChild(row);
+            });
+
+            // Income table
+            const incomeTable = document.getElementById('incomeTable').querySelector('tbody');
+            incomeTable.innerHTML = '';
+
+            financeData.incomes.forEach((income, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${income.date || '-'}</td>
+                    <td>${income.customer || '-'}</td>
+                    <td>${income.product || '-'}</td>
+                    <td>Rp ${income.amount ? income.amount.toLocaleString('id-ID') : '0'}</td>
+                    <td><button class="delete-btn" onclick="deleteFinanceItem('incomes', ${index})">×</button></td>
+                `;
+                incomeTable.appendChild(row);
+            });
+        }
+
+        function calculateFinanceSummary() {
+            const totalExpense = financeData.expenses.reduce((sum, exp) => sum + (exp.amount || 0), 0);
+            const totalIncome = financeData.incomes.reduce((sum, inc) => sum + (inc.amount || 0), 0);
+            const balance = totalIncome - totalExpense;
+
+            document.getElementById('totalExpense').textContent = `Rp ${totalExpense.toLocaleString('id-ID')}`;
+            document.getElementById('totalIncome').textContent = `Rp ${totalIncome.toLocaleString('id-ID')}`;
+
+            const balanceEl = document.getElementById('balance');
+            balanceEl.textContent = `Rp ${Math.abs(balance).toLocaleString('id-ID')}`;
+            balanceEl.className = balance >= 0 ? 'positive' : 'negative';
+        }
+
+        function deleteFinanceItem(type, index) {
+            if (confirm('Apakah Anda yakin ingin menghapus item ini?')) {
+                financeData[type].splice(index, 1);
+                updateFinanceTables();
+                calculateFinanceSummary();
+
+                saveFinanceData().then(success => {
+                    if (success) {
+                        showMessage('Item berhasil dihapus', 'success');
+                    } else {
+                        showMessage('Item dihapus tapi gagal menyimpan perubahan', 'error');
+                    }
+                });
+            }
+        }
+
+        // Tab switching
+        document.querySelectorAll('.finance-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.finance-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.finance-content').forEach(c => c.classList.remove('active'));
+
+                tab.classList.add('active');
+                document.getElementById(`${tab.dataset.tab}Tab`).classList.add('active');
+            });
+        });
+
+        // Form submissions with validation
+        document.getElementById('expenseForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const amount = parseInt(document.getElementById('expenseAmount').value);
+            if (isNaN(amount) || amount <= 0) {
+                showMessage('Jumlah pengeluaran harus angka positif', 'error');
+                return;
+            }
+
+            const newExpense = {
+                date: document.getElementById('expenseDate').value || new Date().toISOString().split('T')[0],
+                category: document.getElementById('expenseCategory').value || 'Lainnya',
+                amount: amount,
+                description: document.getElementById('expenseDescription').value || '-'
+            };
+
+            financeData.expenses.push(newExpense);
+            updateFinanceTables();
+            calculateFinanceSummary();
+            e.target.reset();
+
+            const saved = await saveFinanceData();
+            if (saved) {
+                showMessage('Pengeluaran berhasil ditambahkan & disimpan', 'success');
+            } else {
+                showMessage('Pengeluaran ditambahkan tapi gagal disimpan', 'error');
+            }
+        });
+
+        document.getElementById('incomeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const amount = parseInt(document.getElementById('incomeAmount').value);
+            if (isNaN(amount) || amount <= 0) {
+                showMessage('Jumlah pemasukan harus angka positif', 'error');
+                return;
+            }
+
+            const customer = document.getElementById('customerName').value.trim();
+            if (!customer) {
+                showMessage('Nama pembeli harus diisi', 'error');
+                return;
+            }
+
+            const newIncome = {
+                date: document.getElementById('incomeDate').value || new Date().toISOString().split('T')[0],
+                customer: customer,
+                product: document.getElementById('productType').value || 'Dasai Regular',
+                amount: amount
+            };
+
+            financeData.incomes.push(newIncome);
+            updateFinanceTables();
+            calculateFinanceSummary();
+            e.target.reset();
+
+            const saved = await saveFinanceData();
+            if (saved) {
+                showMessage('Pemasukan berhasil ditambahkan & disimpan', 'success');
+            } else {
+                showMessage('Pemasukan ditambahkan tapi gagal disimpan', 'error');
+            }
+        });
+
+        // Save finance data button
+        document.getElementById('saveFinanceBtn').addEventListener('click', async () => {
+            const saved = await saveFinanceData();
+            if (saved) {
+                showMessage('Semua data keuangan berhasil disimpan!', 'success');
+            }
+        });
+
+        // Show message function
         function showMessage(message, type) {
             const existingMessage = document.querySelector('.success-message, .error-message');
             if (existingMessage) {
