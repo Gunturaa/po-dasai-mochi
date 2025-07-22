@@ -170,7 +170,7 @@
         }
 
         // Fungsi untuk menambah antrian baru
-        function addQueueRow(queueItem = { name: '', number: '', status: 'belum', version: 'Dasai Reguler', color: '' }) {
+        function addQueueRow(queueItem = { name: '', number: '', status: 'belum diproses', version: 'Dasai Reguler', color: '' }) {
             const rowId = Date.now();
             const queueRow = document.createElement('div');
             queueRow.className = 'queue-item';
@@ -189,8 +189,9 @@
                 <div class="form-group">
                     <label>Status</label>
                     <select required>
-                        <option value="belum" ${queueItem.status === 'belum' ? 'selected' : ''}>Belum Diproses</option>
-                        <option value="proses" ${queueItem.status === 'proses' ? 'selected' : ''}>Sedang Diproses</option>
+                        <option value="belum diproses" ${queueItem.status === 'belum diproses' ? 'selected' : ''}>Belum Diproses</option>
+                        <option value="proses" ${queueItem.status === 'proses' ? 'selected' : ''}>Proses</option>
+                        <option value="sedang dikirim" ${queueItem.status === 'sedang dikirim' ? 'selected' : ''}>Sedang Dikirim</option>
                         <option value="selesai" ${queueItem.status === 'selesai' ? 'selected' : ''}>Selesai</option>
                     </select>
                 </div>
