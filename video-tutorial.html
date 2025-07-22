@@ -370,12 +370,17 @@
     </header>
 
     <main class="videos-container" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
-        <!-- Video Card 1 - Inline Video Player -->
+        <!-- Video Card 1 - Vimeo Embed -->
         <article class="video-card">
-            <video class="video-player" controls poster="images/video-thumbnail1.jpg">
-                <source src="images/tutor.mp4" type="video/mp4">
-                Video Anda tidak didukung oleh browser ini.
-            </video>
+            <div style="padding: 56.25% 0 0 0; position: relative;">
+                <iframe
+                    src="https://player.vimeo.com/video/1103253857?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                    frameborder="0"
+                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Tutorial dasai"></iframe>
+            </div>
+            <script src="https://player.vimeo.com/api/player.js"></script>
             <div class="video-content">
                 <h3 class="video-title">Tutorial</h3>
                 <p class="video-description">Pastikan Koneksi Internet Lancar.</p>
@@ -383,28 +388,32 @@
                     Fullscreen</a>
             </div>
         </article>
-
-
     </main>
+
 
     <!-- Modal untuk Video Fullscreen -->
     <div class="modal fade" id="videoModal1" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-dark">
+                <div class="modal-header border-0">
                     <h5 class="modal-title text-white" id="videoModalLabel">Tutorial</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <video class="modal-video" controls>
-                        <source src="images/tutor.mp4" type="video/mp4">
-                        Video Anda tidak didukung oleh browser ini.
-                    </video>
+                <div class="modal-body p-0">
+                    <div style="padding: 56.25% 0 0 0; position: relative;">
+                        <iframe
+                            src="https://player.vimeo.com/video/1103253857?autoplay=1&muted=0&title=0&byline=0&portrait=0"
+                            frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            style="position:absolute;top:0;left:0;width:100%;height:100%;" allowfullscreen
+                            title="Tutorial dasai fullscreen"></iframe>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 
     <footer>
         &copy; 2025 PO Dasai Mochi. All rights reserved.
