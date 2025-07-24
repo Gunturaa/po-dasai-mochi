@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Chat Generator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            padding: 20px 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            border-radius: 20px 20px 0 0 !important;
+            text-align: center;
+            padding: 20px;
+            border: none;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #25D366;
+            box-shadow: 0 0 0 0.2rem rgba(37, 211, 102, 0.25);
+        }
+
+        .btn-wa {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            border: none;
+            border-radius: 15px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+        }
+
+        .btn-wa:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6);
+            color: white;
+        }
+
+        .preview-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 5px solid #25D366;
+        }
+
+        .whatsapp-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #25D366;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .preview-text {
+            white-space: pre-line;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+            font-family: monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fab fa-whatsapp whatsapp-icon"></i>
+                        <h2 class="mb-0">WhatsApp Chat Generator</h2>
+                        <p class="mb-0">Generate pesan WhatsApp untuk preorder</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <form id="waForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="nama" class="form-label">
+                                        <i class="fas fa-user me-2"></i>Nama Lengkap
+                                    </label>
+                                    <input type="text" class="form-control" id="nama"
+                                        placeholder="Masukkan nama lengkap" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="nomor" class="form-label">
+                                        <i class="fas fa-phone me-2"></i>Nomor HP
+                                    </label>
+                                    <input type="tel" class="form-control" id="nomor" placeholder="08xxxxxxxxxx"
+                                        required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="versi" class="form-label">
+                                        <i class="fas fa-cog me-2"></i>Versi Produk
+                                    </label>
+                                    <select class="form-select" id="versi" required>
+                                        <option value="">Pilih Versi</option>
+                                        <option value="Dasai Reguler">Dasai Reguler</option>
+                                        <option value="Liberty Walk">Liberty Walk</option>
+                                        <option value="GTR">GTR</option>
+                                        <option value="ESP32 Navigasi">ESP32 Navigasi</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="warna" class="form-label">
+                                        <i class="fas fa-palette me-2"></i>Warna
+                                    </label>
+                                    <input type="text" class="form-control" id="warna"
+                                        placeholder="Contoh: Putih, Hitam, dll">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="status" class="form-label">
+                                        <i class="fas fa-info-circle me-2"></i>Status
+                                    </label>
+                                    <select class="form-select" id="status" required>
+                                        <option value="pending">Pending</option>
+                                        <option value="confirmed">Confirmed</option>
+                                        <option value="processing">Processing</option>
+                                        <option value="completed">Completed</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="timestamp" class="form-label">
+                                        <i class="fas fa-clock me-2"></i>Timestamp
+                                    </label>
+                                    <input type="datetime-local" class="form-control" id="timestamp" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="waNumber" class="form-label">
+                                    <i class="fab fa-whatsapp me-2"></i>Nomor WhatsApp Tujuan
+                                </label>
+                                <input type="tel" class="form-control" id="waNumber" value="089515441332"
+                                    placeholder="08xxxxxxxxxx" required>
+                            </div>
+
+                            <div class="preview-card">
+                                <h5 class="mb-3"><i class="fas fa-eye me-2"></i>Preview Pesan:</h5>
+                                <div class="preview-text" id="messagePreview">
+                                    Isi form di atas untuk melihat preview pesan...
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <button type="button" class="btn btn-wa btn-lg" onclick="sendToWhatsApp()">
+                                    <i class="fab fa-whatsapp me-2"></i>Kirim ke WhatsApp
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set timestamp saat ini sebagai default
+        document.addEventListener('DOMContentLoaded', function () {
+            const now = new Date();
+            const localTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+            document.getElementById('timestamp').value = localTime.toISOString().slice(0, 16);
+            updatePreview();
+        });
+
+        // Update preview setiap kali input berubah
+        document.querySelectorAll('input, select').forEach(element => {
+            element.addEventListener('input', updatePreview);
+        });
+
+        function updatePreview() {
+            const nama = document.getElementById('nama').value || '[Nama]';
+            const nomor = document.getElementById('nomor').value || '[Nomor HP]';
+            const versi = document.getElementById('versi').value || '[Versi]';
+            const warna = document.getElementById('warna').value || '[Warna]';
+            const status = document.getElementById('status').value || 'pending';
+            const timestamp = document.getElementById('timestamp').value || '[Timestamp]';
+
+            // Format timestamp untuk display yang lebih readable
+            let formattedTime = '[Timestamp]';
+            if (timestamp) {
+                const date = new Date(timestamp);
+                formattedTime = date.toLocaleString('id-ID', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            }
+
+            const message = `*PREORDER DATA*
+
+📝 Nama: ${nama}
+📱 Nomor: ${nomor}
+⚙️ Versi: ${versi}
+🎨 Warna: ${warna}
+📊 Status: ${status}
+⏰ Timestamp: ${formattedTime}
+
+Terima kasih atas preorder Anda! 🙏`;
+
+            document.getElementById('messagePreview').textContent = message;
+        }
+
+        function sendToWhatsApp() {
+            const nama = document.getElementById('nama').value;
+            const nomor = document.getElementById('nomor').value;
+            const versi = document.getElementById('versi').value;
+            const warna = document.getElementById('warna').value || 'N/A';
+            const status = document.getElementById('status').value;
+            const timestamp = document.getElementById('timestamp').value;
+            const waNumber = document.getElementById('waNumber').value;
+
+            // Validasi input
+            if (!nama || !nomor || !versi || !status || !timestamp || !waNumber) {
+                alert('Mohon lengkapi semua field yang required!');
+                return;
+            }
+
+            // Format timestamp untuk display
+            const date = new Date(timestamp);
+            const formattedTime = date.toLocaleString('id-ID', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+
+            // Format pesan untuk WhatsApp (dengan encoding URL)
+            const waMessage = encodeURIComponent(`*PREORDER DATA*
+
+📝 Nama: ${nama}
+📱 Nomor: ${nomor}
+⚙️ Versi: ${versi}
+🎨 Warna: ${warna}
+📊 Status: ${status}
+⏰ Timestamp: ${formattedTime}
+
+Terima kasih atas preorder Anda! 🙏`);
+
+            // Format nomor WA (hapus karakter non-digit dan tambah kode negara)
+            let cleanNumber = waNumber.replace(/\D/g, '');
+            if (cleanNumber.startsWith('0')) {
+                cleanNumber = '62' + cleanNumber.substring(1);
+            } else if (!cleanNumber.startsWith('62')) {
+                cleanNumber = '62' + cleanNumber;
+            }
+
+            // URL WhatsApp
+            const waURL = `https://wa.me/${cleanNumber}?text=${waMessage}`;
+
+            // Buka WhatsApp
+            window.open(waURL, '_blank');
+        }
+    </script>
+</body>
+
+</html>
