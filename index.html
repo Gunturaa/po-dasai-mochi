@@ -1289,8 +1289,125 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // Fungsi untuk mengupdate countdown dan menampilkan/sembunyikan form
-        function updateCountdownAndForm() {
+        // Variable untuk melacak apakah form sudah di-render
+        let formRendered = false;
+
+        // Fungsi untuk merender form hanya sekali
+        function renderForm() {
+            if (formRendered) return; // Jangan render ulang jika sudah ada
+
+            const orderFormContainer = document.getElementById('orderFormContainer');
+            orderFormContainer.innerHTML = `
+        <h2 class="text-center mb-4">FORM PREORDER (Harap Baca S&K dibawah form)</h2>
+        <form id="antrianForm">
+            <div class="mb-3">
+                <label for="nama" class="form-label">Nama Lengkap</label>
+                <input type="text" class="form-control" id="nama" required 
+                       style="background: rgba(40, 40, 60, 0.7); color: white; border: 1px solid #6a11cb;">
+            </div>
+            <div class="mb-3">
+                <label for="nomor" class="form-label">Nomor HP</label>
+                <input type="tel" class="form-control" id="nomor" required
+                       style="background: rgba(40, 40, 60, 0.7); color: white; border: 1px solid #6a11cb;">
+            </div>
+            <div class="mb-3">
+                <label for="versi" class="form-label">Versi Produk</label>
+                <select class="form-select" id="versi" required
+                        style="background: rgba(40, 40, 60, 0.7); color: white; border: 1px solid #6a11cb;">
+                    <option value="">Pilih Versi</option>
+                    <option value="Dasai Reguler">Dasai Reguler</option>
+                    <option value="Liberty Walk">Liberty Walk</option>
+                    <option value="GTR">GTR</option>
+                    <option value="ESP32 Navigasi">ESP32 Navigasi</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="warna" class="form-label">Warna (kosongkan warna untuk ESP32 NavMaps)</label>
+                <input type="text" class="form-control" id="warna"
+                       style="background: rgba(40, 40, 60, 0.7); color: white; border: 1px solid #6a11cb;">
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mt-4"
+                    style="background: linear-gradient(to right, #6a11cb, #2575fc); border: none;">
+                Daftar Preorder
+            </button>
+        </form>
+    `;
+
+            // Tambahkan event listener untuk form submission
+            document.getElementById('antrianForm').addEventListener('submit', handleFormSubmit);
+            formRendered = true;
+        }
+
+        // Fungsi untuk menangani form submission
+        function handleFormSubmit(e) {
+            e.preventDefault(); // Mencegah form submit default
+
+            // Ambil data dari form
+            const nama = document.getElementById('nama').value;
+            const nomor = document.getElementById('nomor').value;
+            const versi = document.getElementById('versi').value;
+            const warna = document.getElementById('warna').value;
+
+            // Validasi data
+            if (!nama || !nomor || !versi) {
+                alert('Mohon lengkapi semua field yang required!');
+                return;
+            }
+
+            // Validasi warna untuk versi selain ESP32 Navigasi
+            if (versi !== 'ESP32 Navigasi' && !warna) {
+                alert('Mohon isi warna untuk produk yang dipilih!');
+                return;
+            }
+
+            // Data yang akan disimpan
+            const orderData = {
+                nama: nama,
+                nomor: nomor,
+                versi: versi,
+                warna: warna || 'N/A', // Jika kosong, isi dengan N/A
+                timestamp: new Date().toISOString(),
+                status: 'pending'
+            };
+
+            // Simpan ke Firebase Database
+            const ordersRef = database.ref('orders');
+            ordersRef.push(orderData)
+                .then((snapshot) => {
+                    console.log('Order berhasil disimpan dengan ID:', snapshot.key);
+
+                    // Format pesan WhatsApp
+                    const waMessage = `*PREORDER BARU*%0A%0A` +
+                        `Nama: ${nama}%0A` +
+                        `Nomor HP: ${nomor}%0A` +
+                        `Versi Produk: ${versi}%0A` +
+                        `Warna: ${warna || 'N/A'}%0A` +
+                        `Waktu Order: ${new Date().toLocaleString('id-ID')}%0A%0A` +
+                        `Silakan konfirmasi pembayaran DP minimal Rp 50.000 ke rekening BCA 4561449095 / DANA 089515441332 yang telah disediakan.%0A` +
+                        `Status: *Pending*%0A%0A` +
+                        `Terima kasih telah melakukan preorder!`;
+
+
+                    // URL WhatsApp
+                    const waURL = `https://wa.me/6289515441332?text=${waMessage}`;
+
+                    // Reset form
+                    document.getElementById('antrianForm').reset();
+
+                    // Redirect ke WhatsApp
+                    window.open(waURL, '_blank');
+
+                    // Tampilkan pesan sukses
+                    alert('Data preorder berhasil disimpan! Anda akan diarahkan ke WhatsApp.');
+                })
+                .catch((error) => {
+                    console.error('Error menyimpan order:', error);
+                    alert('Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
+                });
+        }
+
+        // Fungsi untuk mengupdate countdown saja
+        function updateCountdown() {
             const poRef = database.ref('antrian');
             poRef.once('value').then((snapshot) => {
                 const data = snapshot.val();
@@ -1318,56 +1435,26 @@
                     // Sembunyikan form dan tampilkan countdown
                     countdownContainer.style.display = 'block';
                     orderFormContainer.style.display = 'none';
+                    formRendered = false; // Reset flag jika countdown aktif
                 } else {
                     // Jika PO sudah tersedia, tampilkan form
                     countdownContainer.style.display = 'none';
                     orderFormContainer.style.display = 'block';
-                    // Di sini Anda bisa menambahkan kode untuk menampilkan form
-                    orderFormContainer.innerHTML = `
-                    <h2 class="text-center mb-4">FORM PREORDER (Harap Baca S&K dibawah form)</h2>
-                    <form id="antrianForm">
-                        <div class="mb-3">
-                            <label for="nama" class="form-label">Nama Lengkap</label>
-                            <input type="text" class="form-control" id="nama" required 
-                                   style="background: rgba(40, 40, 60, 0.7); color: white; border: 1px solid #6a11cb;">
-                        </div>
-                        <div class="mb-3">
-                            <label for="nomor" class="form-label">Nomor HP</label>
-                            <input type="tel" class="form-control" id="nomor" required
-                                   style="background: rgba(40, 40, 60, 0.7); color: white; border: 1px solid #6a11cb;">
-                        </div>
-                        <div class="mb-3">
-                            <label for="versi" class="form-label">Versi Produk</label>
-                            <select class="form-select" id="versi" required
-                                    style="background: rgba(40, 40, 60, 0.7); color: white; border: 1px solid #6a11cb;">
-                                <option value="Dasai Reguler">Dasai Reguler</option>
-                                <option value="Liberty Walk">Liberty Walk</option>
-                                <option value="GTR">GTR</option>
-                                <option value="GTR">ESP32 Navigasi</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="warna" class="form-label">Warna (kosongkan warna untuk ESP32 NavMaps)</label>
-                            <input type="text" class="form-control" id="warna" required
-                                   style="background: rgba(40, 40, 60, 0.7); color: white; border: 1px solid #6a11cb;">
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100 mt-4"
-                                style="background: linear-gradient(to right, #6a11cb, #2575fc); border: none;">
-                            Daftar Preorder
-                        </button>
-                    </form>
-                `;
+
+                    // Render form hanya jika belum di-render
+                    renderForm();
                 }
             }).catch((error) => {
                 console.error('Gagal mengambil data countdown:', error);
                 document.getElementById('poCountdown').innerHTML = 'Error memuat informasi PO';
             });
         }
-
         // Jalankan fungsi pertama kali dan set interval untuk update setiap detik
-        updateCountdownAndForm();
-        setInterval(updateCountdownAndForm, 1000);
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
     </script>
+
+
 
     <!-- Back to Top Button -->
     <a href="#" class="btn btn-neon position-fixed"

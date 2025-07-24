@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atmyjaw - Generator Ucapan Terima Kasih</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #e74c3c;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            font-weight: 800;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .form-section {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-section {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .image-upload {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            border: 2px dashed #bdc3c7;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-label:hover {
+            border-color: var(--accent-color);
+            background-color: rgba(231, 76, 60, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-text {
+            text-align: center;
+            color: #7f8c8d;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #c0392b;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .thank-you-card {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            border-top: 5px solid var(--accent-color);
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .card-content {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .card-divider {
+            border: 0;
+            height: 1px;
+            background: #bdc3c7;
+            margin: 1rem 0;
+        }
+
+        .card-footer {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .signature {
+            font-style: italic;
+        }
+
+        .company-name {
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .qrcode-container {
+            margin: 1rem auto;
+            text-align: center;
+        }
+
+        .qrcode-img {
+            max-width: 150px;
+            max-height: 150px;
+            display: none;
+        }
+
+        .qrcode-placeholder {
+            width: 150px;
+            height: 150px;
+            background: #f1f1f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            color: #7f8c8d;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Atmyjaw - Generator Ucapan</h1>
+            <p class="subtitle">Buat ucapan terima kasih profesional untuk pelanggan Atmyjaw</p>
+        </header>
+
+        <div class="main-content">
+            <section class="form-section">
+                <div class="form-group">
+                    <label for="customerName">Nama Pelanggan</label>
+                    <input type="text" id="customerName" placeholder="Masukkan nama pelanggan">
+                </div>
+
+                <div class="form-group">
+                    <label for="orderDetails">Detail Pesanan</label>
+                    <textarea id="orderDetails"
+                        placeholder="Deskripsi pesanan atau nomor order">Silakan scan QR code untuk tutorial koneksi dasai</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="thankYouMessage">Pesan Terima Kasih</label>
+                    <textarea id="thankYouMessage"
+                        placeholder="Tulis pesan terima kasih yang personal">Terima kasih telah memesan di toko kami. Kami sangat menghargai kepercayaan Anda dan berharap Anda menikmati produk kami. Jika ada pertanyaan, jangan ragu untuk menghubungi kami.</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="signatureName">Nama Penanda Tangan</label>
+                    <input type="text" id="signatureName" value="IoTXDev">
+                </div>
+
+                <div class="form-group">
+                    <label>Upload QR Code</label>
+                    <div class="image-upload">
+                        <label class="upload-label" for="qrcodeUpload">
+                            <div class="upload-icon">📁</div>
+                            <div class="upload-text">Klik untuk mengunggah QR Code<br><small>Format: JPG, PNG (Maks.
+                                    2MB)</small></div>
+                            <input type="file" id="qrcodeUpload" accept="image/*" style="display: none;">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button id="generateBtn" class="btn btn-primary">Generate Ucapan</button>
+                    <button id="resetBtn" class="btn btn-secondary">Reset Form</button>
+                </div>
+            </section>
+
+            <section class="preview-section">
+                <h2>Pratinjau</h2>
+                <div class="thank-you-card" id="thankYouCard">
+                    <h2 class="card-title">Terima Kasih Atas Pesanan Anda!</h2>
+
+                    <p class="card-content">
+                        <span id="previewCustomerName">Kepada Pelanggan Terhormat</span>,<br><br>
+                        <span id="previewThankYouMessage">Kami ingin mengucapkan terima kasih atas pesanan Anda.
+                            Dukungan Anda sangat berarti bagi kami.</span>
+                        <br><br>
+                        Detail pesanan: <span id="previewOrderDetails">[Detail pesanan akan muncul di sini]</span>
+                    </p>
+
+                    <div class="qrcode-container">
+                        <img id="previewQrcode" class="qrcode-img" alt="QR Code">
+                        <div id="qrcodePlaceholder" class="qrcode-placeholder">QR Code akan muncul di sini</div>
+                    </div>
+
+                    <hr class="card-divider">
+
+                    <div class="card-footer">
+                        <div class="signature">
+                            Hormat kami,<br>
+                            <strong id="previewSignatureName">Tim Atmyjaw</strong>
+                        </div>
+                        <div class="company-name">Atmyjaw</div>
+                    </div>
+                </div>
+
+                <div class="preview-controls">
+                    <button id="downloadPdfBtn" class="btn btn-primary" disabled>Unduh sebagai PDF</button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Inisialisasi jsPDF
+        const { jsPDF } = window.jspdf;
+
+        // Elemen DOM
+        const customerNameInput = document.getElementById('customerName');
+        const orderDetailsInput = document.getElementById('orderDetails');
+        const thankYouMessageInput = document.getElementById('thankYouMessage');
+        const signatureNameInput = document.getElementById('signatureName');
+        const qrcodeUploadInput = document.getElementById('qrcodeUpload');
+        const generateBtn = document.getElementById('generateBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+        const previewQrcode = document.getElementById('previewQrcode');
+        const qrcodePlaceholder = document.getElementById('qrcodePlaceholder');
+
+        // Preview elements
+        const previewCustomerName = document.getElementById('previewCustomerName');
+        const previewOrderDetails = document.getElementById('previewOrderDetails');
+        const previewThankYouMessage = document.getElementById('previewThankYouMessage');
+        const previewSignatureName = document.getElementById('previewSignatureName');
+        const thankYouCard = document.getElementById('thankYouCard');
+
+        // Event listeners
+        generateBtn.addEventListener('click', generateThankYou);
+        resetBtn.addEventListener('click', resetForm);
+        downloadPdfBtn.addEventListener('click', downloadAsPdf);
+        qrcodeUploadInput.addEventListener('change', handleQrcodeUpload);
+
+        // Fungsi untuk handle upload QR Code
+        function handleQrcodeUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewQrcode.src = e.target.result;
+                    previewQrcode.style.display = 'block';
+                    qrcodePlaceholder.style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Fungsi untuk generate ucapan terima kasih
+        function generateThankYou() {
+            // Update preview dengan nilai dari form
+            previewCustomerName.textContent = customerNameInput.value || 'Kepada Pelanggan Terhormat';
+            previewOrderDetails.textContent = orderDetailsInput.value || '[Detail pesanan akan muncul di sini]';
+            previewThankYouMessage.textContent = thankYouMessageInput.value || 'Kami ingin mengucapkan terima kasih atas pesanan Anda. Dukungan Anda sangat berarti bagi kami.';
+            previewSignatureName.textContent = signatureNameInput.value || 'Tim Atmyjaw';
+
+            // Aktifkan tombol download
+            downloadPdfBtn.disabled = false;
+        }
+
+        // Fungsi untuk reset form
+        function resetForm() {
+            customerNameInput.value = '';
+            orderDetailsInput.value = 'Silakan scan QR code untuk tutorial koneksi dasai';
+            thankYouMessageInput.value = 'Terima kasih telah memesan di toko kami. Kami sangat menghargai kepercayaan Anda dan berharap Anda menikmati produk kami. Jika ada pertanyaan, jangan ragu untuk menghubungi kami.';
+            signatureNameInput.value = 'IoTXDev';
+            qrcodeUploadInput.value = '';
+            previewQrcode.src = '';
+            previewQrcode.style.display = 'none';
+            qrcodePlaceholder.style.display = 'flex';
+
+            // Reset preview
+            previewCustomerName.textContent = 'Kepada Pelanggan Terhormat';
+            previewOrderDetails.textContent = '[Detail pesanan akan muncul di sini]';
+            previewThankYouMessage.textContent = 'Kami ingin mengucapkan terima kasih atas pesanan Anda. Dukungan Anda sangat berarti bagi kami.';
+            previewSignatureName.textContent = 'Tim Atmyjaw';
+
+            // Nonaktifkan tombol download
+            downloadPdfBtn.disabled = true;
+        }
+
+        // Fungsi untuk download sebagai PDF
+        function downloadAsPdf() {
+            // Tampilkan loading
+            downloadPdfBtn.textContent = 'Membuat PDF...';
+            downloadPdfBtn.disabled = true;
+
+            // Gunakan html2canvas untuk menangkap card sebagai gambar
+            html2canvas(thankYouCard, {
+                scale: 2,
+                logging: false,
+                useCORS: true,
+                allowTaint: true
+            }).then(canvas => {
+                // Buat PDF
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm'
+                });
+
+                // Ukuran halaman PDF (A5: 148 x 210 mm)
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+
+                // Hitung aspect ratio
+                const canvasRatio = canvas.height / canvas.width;
+                let imgWidth = pdfWidth - 20; // Margin 10mm kiri-kanan
+                let imgHeight = imgWidth * canvasRatio;
+
+                // Jika terlalu tinggi, sesuaikan dengan tinggi halaman
+                if (imgHeight > pdfHeight - 20) {
+                    imgHeight = pdfHeight - 20; // Margin 10mm atas-bawah
+                    imgWidth = imgHeight / canvasRatio;
+                }
+
+                // Hitung posisi untuk center
+                const x = (pdfWidth - imgWidth) / 2;
+                const y = (pdfHeight - imgHeight) / 2;
+
+                // Tambahkan gambar ke PDF
+                pdf.addImage(canvas, 'PNG', x, y, imgWidth, imgHeight);
+
+                // Simpan PDF
+                pdf.save('Atmyjaw_TerimaKasih_' + (customerNameInput.value || 'Pelanggan') + '.pdf');
+
+                // Reset tombol
+                downloadPdfBtn.textContent = 'Unduh sebagai PDF';
+                downloadPdfBtn.disabled = false;
+            });
+        }
+    </script>
+</body>
+
+</html>
