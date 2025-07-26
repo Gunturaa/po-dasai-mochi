@@ -689,6 +689,9 @@
                                     <i class="fas fa-user-shield"></i> ${data.author || 'Admin'} &bull; 
                                     <i class="fas fa-clock"></i> ${new Date(data.timestamp).toLocaleString('id-ID')}
                                 </div>
+                                <button class="btn btn-warning btn-sm mt-2 edit-announcement-btn" data-key="${key}" data-title="${encodeURIComponent(data.title)}" data-message="${encodeURIComponent(data.message)}">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
                                 <button class="btn btn-danger btn-sm mt-2 delete-announcement-btn" data-key="${key}">
                                     <i class="fas fa-trash"></i> Hapus
                                 </button>
@@ -710,6 +713,55 @@
                         .then(() => showNotification('Pengumuman dihapus', 'success'))
                         .catch(err => showNotification('Gagal menghapus: ' + err.message, 'error'));
                 }
+            }
+        });
+
+        // Event listener untuk tombol edit pengumuman
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.edit-announcement-btn')) {
+                const btn = e.target.closest('.edit-announcement-btn');
+                const key = btn.getAttribute('data-key');
+                const title = decodeURIComponent(btn.getAttribute('data-title'));
+                const message = decodeURIComponent(btn.getAttribute('data-message'));
+
+                // Isi form dengan data pengumuman yang dipilih
+                document.getElementById('announcementTitle').value = title;
+                document.getElementById('announcementMessage').value = message;
+                document.getElementById('postAnnouncementBtn').style.display = 'none';
+
+                // Tambahkan tombol update jika belum ada
+                let updateBtn = document.getElementById('updateAnnouncementBtn');
+                if (!updateBtn) {
+                    updateBtn = document.createElement('button');
+                    updateBtn.id = 'updateAnnouncementBtn';
+                    updateBtn.className = 'btn btn-success';
+                    updateBtn.innerHTML = '<i class="fas fa-save"></i> Update Pengumuman';
+                    document.getElementById('announcementMessage').parentElement.appendChild(updateBtn);
+                } else {
+                    updateBtn.style.display = '';
+                }
+
+                // Event update
+                updateBtn.onclick = function() {
+                    const newTitle = document.getElementById('announcementTitle').value.trim();
+                    const newMessage = document.getElementById('announcementMessage').value.trim();
+                    if (!newTitle || !newMessage) {
+                        showNotification('Judul dan isi pengumuman harus diisi!', 'error');
+                        return;
+                    }
+                    db.ref('announcements/' + key).update({
+                        title: newTitle,
+                        message: newMessage
+                    }).then(() => {
+                        showNotification('Pengumuman berhasil diupdate!', 'success');
+                        document.getElementById('announcementTitle').value = '';
+                        document.getElementById('announcementMessage').value = '';
+                        updateBtn.style.display = 'none';
+                        document.getElementById('postAnnouncementBtn').style.display = '';
+                    }).catch((error) => {
+                        showNotification('Gagal update: ' + error.message, 'error');
+                    });
+                };
             }
         });
 
