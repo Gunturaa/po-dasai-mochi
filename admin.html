@@ -373,6 +373,16 @@
                 </button>
             </div>
         </div>
+
+        <!-- Daftar Pengumuman -->
+        <div class="card" id="announcementAdminSection">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-bullhorn"></i> Daftar Pengumuman</h2>
+            </div>
+            <div id="adminAnnouncementList">
+                <div style="color:#aaa;">Memuat pengumuman...</div>
+            </div>
+        </div>
     </div>
 
     <!-- Firebase SDK -->
@@ -654,8 +664,59 @@
             }
         }
 
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', () => {
+        // Fungsi untuk menampilkan daftar pengumuman di admin
+        function loadAdminAnnouncements() {
+            const list = document.getElementById('adminAnnouncementList');
+            if (!list) return;
+
+            db.ref('announcements').orderByChild('timestamp').limitToLast(10).on('value', (snapshot) => {
+                if (!snapshot.exists()) {
+                    list.innerHTML = '<div style="color:#aaa;">Belum ada pengumuman.</div>';
+                    return;
+                }
+                const items = [];
+                snapshot.forEach(child => {
+                    const data = child.val();
+                    const key = child.key;
+                    items.unshift(`
+                        <div class="card mb-2" style="background:rgba(30,30,45,0.7);color:#fff;border:1px solid #6a11cb;">
+                            <div class="card-body py-2 px-3">
+                                <div style="font-weight:600;font-size:1.1em;">
+                                    <i class="fas fa-bullhorn text-warning"></i> ${data.title}
+                                </div>
+                                <div style="font-size:0.98em;">${data.message}</div>
+                                <div class="text-end" style="font-size:0.85em;color:#aaa;">
+                                    <i class="fas fa-user-shield"></i> ${data.author || 'Admin'} &bull; 
+                                    <i class="fas fa-clock"></i> ${new Date(data.timestamp).toLocaleString('id-ID')}
+                                </div>
+                                <button class="btn btn-danger btn-sm mt-2 delete-announcement-btn" data-key="${key}">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
+                            </div>
+                        </div>
+                    `);
+                });
+                list.innerHTML = items.join('');
+            });
+        }
+
+        // Event listener untuk tombol hapus pengumuman
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.delete-announcement-btn')) {
+                const btn = e.target.closest('.delete-announcement-btn');
+                const key = btn.getAttribute('data-key');
+                if (confirm('Hapus pengumuman ini?')) {
+                    db.ref('announcements/' + key).remove()
+                        .then(() => showNotification('Pengumuman dihapus', 'success'))
+                        .catch(err => showNotification('Gagal menghapus: ' + err.message, 'error'));
+                }
+            }
+        });
+
+        // Panggil saat DOM siap
+        document.addEventListener('DOMContentLoaded', function () {
+            loadAdminAnnouncements();
+
             // Cek status autentikasi
             auth.onAuthStateChanged((user) => {
                 if (!user) {

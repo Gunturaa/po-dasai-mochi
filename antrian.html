@@ -118,6 +118,24 @@
             text-shadow: 0 0 15px #00f2fe;
             margin: 10px 0;
         }
+
+        /* Pengumuman */
+        #announcementSection {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(30, 30, 45, 0.7);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        #announcementSection h3 {
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        #announcementList {
+            color: #aaa;
+        }
     </style>
 </head>
 
@@ -147,6 +165,14 @@
             </tr>
         </tbody>
     </table>
+
+    <!-- Pengumuman -->
+    <div class="mb-4" id="announcementSection">
+        <h3 style="color:#6a11cb;"><i class="fas fa-bullhorn"></i> Pengumuman</h3>
+        <div id="announcementList">
+            <div style="color:#aaa;">Memuat pengumuman...</div>
+        </div>
+    </div>
 
     <!-- Firebase JS SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -236,6 +262,44 @@
 
             tbody.innerHTML = rows;
         }
+
+        // Fungsi untuk menampilkan pengumuman
+        function loadAnnouncements() {
+            const announcementList = document.getElementById('announcementList');
+            if (!announcementList) return;
+
+            const announcementsRef = firebase.database().ref('announcements').orderByChild('timestamp');
+            announcementsRef.limitToLast(5).on('value', (snapshot) => {
+                if (!snapshot.exists()) {
+                    announcementList.innerHTML = '<div style="color:#aaa;">Belum ada pengumuman.</div>';
+                    return;
+                }
+
+                // Urutkan terbaru di atas
+                const items = [];
+                snapshot.forEach(child => {
+                    const data = child.val();
+                    items.unshift(`
+                        <div class="card mb-2" style="background:rgba(30,30,45,0.7);color:#fff;border:1px solid #6a11cb;">
+                            <div class="card-body py-2 px-3">
+                                <div style="font-weight:600;font-size:1.1em;"><i class="fas fa-bullhorn text-warning"></i> ${data.title}</div>
+                                <div style="font-size:0.98em;">${data.message}</div>
+                                <div class="text-end" style="font-size:0.85em;color:#aaa;">
+                                    <i class="fas fa-user-shield"></i> ${data.author || 'Admin'} &bull; 
+                                    <i class="fas fa-clock"></i> ${new Date(data.timestamp).toLocaleString('id-ID')}
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                });
+                announcementList.innerHTML = items.join('');
+            });
+        }
+
+        // Panggil fungsi saat DOM siap
+        document.addEventListener('DOMContentLoaded', function () {
+            loadAnnouncements();
+        });
 
         // Listen for changes in the database
         const queueRef = firebase.database().ref('antrian');
