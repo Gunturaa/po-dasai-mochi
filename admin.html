@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Antrian</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --danger: #f72585;
+            --danger-dark: #e5177b;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --dark: #212529;
+            --darker: #1a1e21;
+            --darkest: #121416;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --gray-dark: #495057;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--darkest);
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-dark);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: var(--danger-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: var(--darkest);
+        }
+
+        .btn-success:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        .card {
+            background-color: var(--dark);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--gray-dark);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-dark);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--light);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: var(--darker);
+            border: 1px solid var(--gray-dark);
+            border-radius: 6px;
+            color: var(--light);
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .queue-item {
+            background-color: var(--darker);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            position: relative;
+            border: 1px solid var(--gray-dark);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .queue-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--danger);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .delete-btn:hover {
+            background-color: var(--danger-dark);
+            transform: scale(1.1);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transform: translateX(120%);
+            transition: transform 0.4s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background-color: #10b981;
+        }
+
+        .notification.error {
+            background-color: var(--danger);
+        }
+
+        .notification.warning {
+            background-color: var(--warning);
+        }
+
+        .notification i {
+            font-size: 20px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-belum-diproses {
+            background-color: var(--danger);
+        }
+
+        .status-bahan-sedang-dipesan {
+            background-color: var(--warning);
+        }
+
+        .status-proses {
+            background-color: var(--primary);
+        }
+
+        .status-sedang-dikirim {
+            background-color: #7209b7;
+        }
+
+        .status-selesai {
+            background-color: var(--success);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: var(--gray-dark);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-tasks"></i> Dashboard Admin Antrian</h1>
+            <button id="logoutBtn" class="btn btn-danger">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </header>
+
+        <div id="notification" class="notification">
+            <i class="fas fa-check-circle"></i>
+            <span id="notificationMessage"></span>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-calendar-alt"></i> Tanggal PO</h2>
+                </div>
+                <div class="form-group">
+                    <label for="poDatetime">Tanggal & Waktu PO:</label>
+                    <input type="datetime-local" id="poDatetime" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-bullhorn"></i> Buat Pengumuman</h2>
+                </div>
+                <div class="form-group">
+                    <label for="announcementTitle">Judul Pengumuman:</label>
+                    <input type="text" id="announcementTitle" class="form-control" placeholder="Judul pengumuman"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="announcementMessage">Isi Pengumuman:</label>
+                    <textarea id="announcementMessage" class="form-control" rows="4" placeholder="Isi pengumuman"
+                        required></textarea>
+                </div>
+                <button id="postAnnouncementBtn" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Posting Pengumuman
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-users"></i> Manajemen Antrian</h2>
+                <button id="addRowBtn" class="btn btn-success btn-sm">
+                    <i class="fas fa-plus"></i> Tambah
+                </button>
+            </div>
+            <div id="antrianInputs"></div>
+            <div class="form-group" style="margin-top: 20px;">
+                <button id="saveBtn" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Simpan Semua
+                </button>
+                <button id="deleteAllBtn" class="btn btn-danger" style="margin-top: 10px;">
+                    <i class="fas fa-trash"></i> Hapus Semua Data
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+    <script>
+        // Konfigurasi Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDdz-E2NiUOVwFnpZ_PbOdOSg_5LPgx9p8",
+            authDomain: "antrianapp-b2b75.firebaseapp.com",
+            databaseURL: "https://antrianapp-b2b75-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "antrianapp-b2b75",
+            storageBucket: "antrianapp-b2b75.firebasestorage.app",
+            messagingSenderId: "851190128972",
+            appId: "1:851190128972:web:02424c256958b90d92efe9",
+            measurementId: "G-E9YVPR644B"
+        };
+
+        // Inisialisasi Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        // Fungsi untuk menampilkan notifikasi
+        function showNotification(message, type = 'success', duration = 5000) {
+            const notification = document.getElementById('notification');
+            const messageSpan = document.getElementById('notificationMessage');
+
+            // Set icon based on type
+            let iconClass;
+            switch (type) {
+                case 'error':
+                    iconClass = 'fas fa-exclamation-circle';
+                    break;
+                case 'warning':
+                    iconClass = 'fas fa-exclamation-triangle';
+                    break;
+                default:
+                    iconClass = 'fas fa-check-circle';
+            }
+
+            notification.innerHTML = `<i class="${iconClass}"></i><span id="notificationMessage">${message}</span>`;
+            notification.className = `notification ${type} show`;
+
+            // Auto hide
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, duration);
+        }
+
+        // Fungsi untuk mendapatkan status indicator
+        function getStatusIndicator(status) {
+            const statusClass = `status-${status.replace(/\s+/g, '-')}`;
+            return `<span class="status-indicator ${statusClass}"></span>`;
+        }
+
+        // Fungsi untuk menambah antrian baru
+        function addQueueRow(queueItem = { name: '', number: '', status: 'belum diproses', version: 'Dasai Reguler', color: '' }) {
+            const rowId = 'item-' + Date.now();
+            const queueRow = document.createElement('div');
+            queueRow.className = 'queue-item fade-in';
+            queueRow.dataset.id = rowId;
+
+            queueRow.innerHTML = `
+                <button class="delete-btn" data-id="${rowId}" title="Hapus antrian">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="form-group">
+                    <label>Nama Pelanggan</label>
+                    <input type="text" class="form-control" placeholder="Nama lengkap" value="${queueItem.name}" required>
+                </div>
+                <div class="form-group">
+                    <label>Nomor Antrian</label>
+                    <input type="number" class="form-control" placeholder="Nomor antrian" value="${queueItem.number}" required>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select class="form-control" required>
+                        <option value="belum diproses" ${queueItem.status === 'belum diproses' ? 'selected' : ''}>
+                            ${getStatusIndicator('belum diproses')} Belum Diproses
+                        </option>
+                        <option value="bahan sedang dipesan" ${queueItem.status === 'bahan sedang dipesan' ? 'selected' : ''}>
+                            ${getStatusIndicator('bahan sedang dipesan')} Bahan Sedang Dipesan
+                        </option>
+                        <option value="proses" ${queueItem.status === 'proses' ? 'selected' : ''}>
+                            ${getStatusIndicator('proses')} Proses
+                        </option>
+                        <option value="sedang dikirim" ${queueItem.status === 'sedang dikirim' ? 'selected' : ''}>
+                            ${getStatusIndicator('sedang dikirim')} Sedang Dikirim
+                        </option>
+                        <option value="selesai" ${queueItem.status === 'selesai' ? 'selected' : ''}>
+                            ${getStatusIndicator('selesai')} Selesai
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Versi</label>
+                    <select class="form-control" required>
+                        <option value="Dasai Reguler" ${queueItem.version === 'Dasai Reguler' ? 'selected' : ''}>Dasai Reguler</option>
+                        <option value="Liberty Walk" ${queueItem.version === 'Liberty Walk' ? 'selected' : ''}>Liberty Walk</option>
+                        <option value="GTR" ${queueItem.version === 'GTR' ? 'selected' : ''}>GTR</option>
+                        <option value="ESP32 Navigasi" ${queueItem.version === 'ESP32 Navigasi' ? 'selected' : ''}>ESP32 Navigasi</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Warna</label>
+                    <input type="text" class="form-control" placeholder="Warna kendaraan (kosongkan untuk ESP32 Navigasi)" value="${queueItem.color}">
+                </div>
+            `;
+
+            document.getElementById('antrianInputs').appendChild(queueRow);
+            return queueRow;
+        }
+
+        // Fungsi untuk posting pengumuman dengan Push ID otomatis
+        function postAnnouncement() {
+            const title = document.getElementById('announcementTitle').value.trim();
+            const message = document.getElementById('announcementMessage').value.trim();
+
+            if (!title || !message) {
+                showNotification('Judul dan isi pengumuman harus diisi!', 'error');
+                return;
+            }
+
+            // Generate Push ID otomatis
+            const newAnnouncementRef = db.ref('announcements').push();
+
+            newAnnouncementRef.set({
+                title: title,
+                message: message,
+                timestamp: new Date().toISOString(),
+                author: 'Admin'
+            }).then(() => {
+                showNotification('Pengumuman berhasil diposting!', 'success');
+                document.getElementById('announcementTitle').value = '';
+                document.getElementById('announcementMessage').value = '';
+            }).catch((error) => {
+                console.error("Error posting announcement:", error);
+                showNotification('Gagal memposting pengumuman: ' + error.message, 'error');
+            });
+        }
+
+        // Fungsi untuk menyimpan data ke Firebase
+        async function saveQueueData() {
+            const saveBtn = document.getElementById('saveBtn');
+            const originalText = saveBtn.innerHTML;
+
+            try {
+                // Disable button dan show loading
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+
+                const poDatetime = document.getElementById('poDatetime').value;
+                if (!poDatetime) {
+                    throw new Error('Harap isi tanggal dan waktu PO');
+                }
+
+                const queueItems = document.querySelectorAll('.queue-item');
+                if (queueItems.length === 0) {
+                    throw new Error('Tambahkan setidaknya satu antrian');
+                }
+
+                const queueData = [];
+                let isValid = true;
+                let invalidFields = [];
+
+                queueItems.forEach((item, index) => {
+                    const inputs = item.querySelectorAll('input, select');
+                    const itemData = {};
+
+                    inputs.forEach(input => {
+                        const fieldName = input.previousElementSibling.textContent.toLowerCase().replace(/\s+/g, '');
+                        const value = input.value.trim();
+
+                        // Validasi khusus untuk warna (tidak required untuk ESP32 Navigasi)
+                        if (fieldName === 'warna') {
+                            const versionSelect = item.querySelector('select:nth-of-type(2)');
+                            const version = versionSelect ? versionSelect.value : '';
+
+                            if (version !== 'ESP32 Navigasi' && !value) {
+                                input.style.border = '2px solid var(--danger)';
+                                invalidFields.push(`Antrian ${index + 1}: Warna harus diisi untuk versi ${version}`);
+                                isValid = false;
+                            } else {
+                                input.style.border = '1px solid var(--gray-dark)';
+                                itemData[fieldName] = value || 'N/A';
+                            }
+                        } else if (!value && input.hasAttribute('required')) {
+                            input.style.border = '2px solid var(--danger)';
+                            invalidFields.push(`Antrian ${index + 1}: ${input.previousElementSibling.textContent} harus diisi`);
+                            isValid = false;
+                        } else {
+                            input.style.border = '1px solid var(--gray-dark)';
+                            itemData[fieldName] = value;
+                        }
+                    });
+
+                    if (Object.keys(itemData).length > 0) {
+                        queueData.push({
+                            name: itemData.namapelanggan || '',
+                            number: parseInt(itemData.nomorantrian) || 0,
+                            status: itemData.status || 'belum diproses',
+                            version: itemData.versi || 'Dasai Reguler',
+                            color: itemData.warna || 'N/A'
+                        });
+                    }
+                });
+
+                if (!isValid) {
+                    throw new Error(`Validasi gagal:\n${invalidFields.join('\n')}`);
+                }
+
+                // Simpan ke Firebase dengan struktur yang benar
+                await db.ref('antrian').set({
+                    poDatetime,
+                    queue: queueData,
+                    lastUpdated: new Date().toISOString()
+                });
+
+                showNotification(
+                    `Data berhasil disimpan! (${queueData.length} antrian)`,
+                    'success'
+                );
+
+            } catch (error) {
+                console.error("Error saving data:", error);
+                showNotification('❌ ' + error.message, 'error');
+            } finally {
+                // Reset button state
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Semua';
+            }
+        }
+
+        // Fungsi untuk memuat data dari Firebase
+        async function loadQueueData() {
+            try {
+                const snapshot = await db.ref('antrian').once('value');
+
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    document.getElementById('poDatetime').value = data.poDatetime || new Date().toISOString().slice(0, 16);
+
+                    if (data.queue && data.queue.length > 0) {
+                        document.getElementById('antrianInputs').innerHTML = '';
+                        data.queue.forEach(item => addQueueRow(item));
+                    }
+                }
+            } catch (error) {
+                console.error("Error loading data:", error);
+                showNotification('Gagal memuat data: ' + error.message, 'error');
+            }
+        }
+
+        // Fungsi untuk menghapus semua data
+        async function deleteAllData() {
+            if (confirm('⚠️ Apakah Anda yakin ingin menghapus SEMUA data antrian?\n\nTindakan ini tidak dapat dibatalkan!')) {
+                const deleteBtn = document.getElementById('deleteAllBtn');
+                const originalText = deleteBtn.innerHTML;
+
+                try {
+                    deleteBtn.disabled = true;
+                    deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menghapus...';
+
+                    await db.ref('antrian').remove();
+                    document.getElementById('antrianInputs').innerHTML = '';
+                    document.getElementById('poDatetime').value = new Date().toISOString().slice(0, 16);
+
+                    showNotification('Semua data berhasil dihapus', 'success');
+                } catch (error) {
+                    console.error("Error deleting data:", error);
+                    showNotification('Gagal menghapus data: ' + error.message, 'error');
+                } finally {
+                    deleteBtn.disabled = false;
+                    deleteBtn.innerHTML = '<i class="fas fa-trash"></i> Hapus Semua Data';
+                }
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cek status autentikasi
+            auth.onAuthStateChanged((user) => {
+                if (!user) {
+                    window.location.href = 'login.html';
+                } else {
+                    // Set default datetime to now
+                    const now = new Date();
+                    const timezoneOffset = now.getTimezoneOffset() * 60000;
+                    const localISOTime = new Date(now - timezoneOffset).toISOString().slice(0, 16);
+                    document.getElementById('poDatetime').value = localISOTime;
+
+                    // Load data
+                    loadQueueData();
+                }
+            });
+        });
+
+        document.getElementById('addRowBtn').addEventListener('click', () => {
+            const newRow = addQueueRow();
+            newRow.scrollIntoView({ behavior: 'smooth' });
+            showNotification('Antrian baru ditambahkan', 'success');
+        });
+
+        document.getElementById('saveBtn').addEventListener('click', saveQueueData);
+        document.getElementById('deleteAllBtn').addEventListener('click', deleteAllData);
+        document.getElementById('postAnnouncementBtn').addEventListener('click', postAnnouncement);
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            auth.signOut().then(() => {
+                window.location.href = 'login.html';
+            });
+        });
+
+        document.getElementById('antrianInputs').addEventListener('click', (e) => {
+            if (e.target.closest('.delete-btn')) {
+                const queueItem = e.target.closest('.queue-item');
+                const nameInput = queueItem.querySelector('input[type="text"]');
+                const customerName = nameInput ? nameInput.value || 'Antrian' : 'Antrian';
+
+                if (confirm(`Hapus ${customerName} dari daftar antrian?`)) {
+                    queueItem.classList.add('fade-out');
+                    setTimeout(() => {
+                        queueItem.remove();
+                        showNotification(`${customerName} dihapus dari antrian`, 'success');
+                    }, 300);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
