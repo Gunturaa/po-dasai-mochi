@@ -9,94 +9,278 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght@300;400;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
     <!-- ESP Web Tools -->
     <script type="module" src="https://unpkg.com/esp-web-tools@9/dist/web/install-button.js?module"></script>
 
     <!-- Custom Styles -->
     <style>
+        :root {
+            --primary-color: #00f7ff;
+            --secondary-color: #ff2d75;
+            --dark-color: #0f0e17;
+            --light-color: #fffffe;
+        }
+
         body {
-            background: linear-gradient(135deg, #1f1c2c, #928dab);
-            color: white;
+            background: linear-gradient(135deg, #0f0e17, #1f1c2c);
+            color: var(--light-color);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
         }
 
         h1 {
+            font-family: 'Orbitron', sans-serif;
             font-weight: 700;
-            animation: fadeInDown 1s ease-in-out;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1.5rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 247, 255, 0.3);
         }
 
         p {
-            animation: fadeInUp 1.2s ease-in-out;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 1.5s ease-in-out;
+            background: rgba(15, 14, 23, 0.8);
+            border: 1px solid rgba(0, 247, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(0, 247, 255, 0.1) inset;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            max-width: 600px;
+            width: 90%;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            z-index: -1;
+            border-radius: 18px;
+            opacity: 0.3;
+            animation: borderGlow 3s linear infinite;
+        }
+
+        @keyframes borderGlow {
+            0% {
+                opacity: 0.3;
             }
 
-            to {
+            50% {
+                opacity: 0.6;
+            }
+
+            100% {
+                opacity: 0.3;
+            }
+        }
+
+        esp-web-install-button {
+            --esp-tools-button-background: linear-gradient(135deg, var(--primary-color), #0095ff);
+            --esp-tools-text-color: var(--dark-color);
+            --esp-tools-button-border-radius: 50px;
+            --esp-tools-button-font-weight: 600;
+            --esp-tools-button-padding: 12px 30px;
+            transition: all 0.3s ease;
+        }
+
+        esp-web-install-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 247, 255, 0.3);
+        }
+
+        .note {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            margin-top: 2rem;
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(0, 247, 255, 0.5);
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+
+            50% {
                 opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100vh) translateX(20px);
+                opacity: 0;
+            }
+        }
+
+        .device-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
                 transform: scale(1);
             }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 20px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+            transition: width 0.3s ease;
         }
     </style>
 </head>
 
 <body>
+    <!-- Animated Background Particles -->
+    <div class="particles" id="particles"></div>
 
     <div class="container">
-        <div class="card text-white">
-            <h1>🚀 ESP32 Firmware Installer</h1>
-            <p>Colokkan ESP32 ke laptop lalu klik tombol di bawah untuk install firmware terbaru.</p>
+        <div class="card animate__animated animate__fadeIn">
+            <div class="device-icon">📶</div>
+            <h1 class="animate__animated animate__fadeInDown">ESP32 Firmware Installer</h1>
+            <p class="animate__animated animate__fadeIn animate__delay-1s">Connect your ESP32 device via USB, then click
+                below to install the latest firmware</p>
 
             <!-- Install Button -->
-            <esp-web-install-button manifest="firmware/manifest.json"></esp-web-install-button>
+            <div class="animate__animated animate__fadeIn animate__delay-2s">
+                <esp-web-install-button manifest="firmware/manifest.json"></esp-web-install-button>
+            </div>
 
-            <p class="mt-3"><small>Gunakan <b>Google Chrome</b> atau <b>Microsoft Edge</b> (desktop).</small></p>
+            <!-- Progress Bar (hidden by default) -->
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <p class="note animate__animated animate__fadeIn animate__delay-3s">For best results, use <b>Google
+                    Chrome</b> or <b>Microsoft Edge</b> on desktop</p>
         </div>
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JS for effects -->
+    <script>
+        // Create animated particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = window.innerWidth < 768 ? 20 : 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+
+                // Random size between 1px and 3px
+                const size = Math.random() * 2 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+
+                // Random animation duration and delay
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 10;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Initialize particles when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+
+            // Listen for installation events (example - you'll need to adapt this to actual ESP Web Tools events)
+            const installButton = document.querySelector('esp-web-install-button');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+
+            // This is a placeholder - you'll need to hook into actual events from esp-web-tools
+            installButton.addEventListener('click', () => {
+                progressContainer.style.display = 'block';
+
+                // Simulate progress (remove this in production)
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 10;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                    }
+                    progressBar.style.width = `${progress}%`;
+                }, 300);
+            });
+        });
+    </script>
 </body>
 
 </html>
